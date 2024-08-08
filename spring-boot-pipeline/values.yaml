@@ -1,0 +1,6 @@
+domain: contract-first-idp
+system: default-application
+component: default-service
+
+image:
+  registry: image-registry.openshift-image-registry.svc:5000

@@ -1,0 +1,21 @@
+system: default-application
+component: default-service
+environment: dev
+
+image:
+  registry: image-registry.openshift-image-registry.svc:5000
+  tag: latest
+
+containerPorts:
+  service: 8080
+  management: 8081
+
+replicaCount: 1
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "100m"
+  limits:
+    memory: "512Mi"
+    cpu: "200m"
