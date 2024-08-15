@@ -6,10 +6,6 @@ image:
   registry: image-registry.openshift-image-registry.svc:5000
   tag: latest
 
-containerPorts:
-  service: 8080
-  management: 8081
-
 replicaCount: 1
 
 resources:

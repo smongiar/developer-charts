@@ -23,9 +23,9 @@ spec:
           imagePullPolicy: Always
           ports:
             - name: http
-              containerPort: {{ .Values.containerPorts.service }}
+              containerPort: 8080
             - name: management
-              containerPort: {{ .Values.containerPorts.management }}
+              containerPort: 8081
           env:
           resources:
             requests:

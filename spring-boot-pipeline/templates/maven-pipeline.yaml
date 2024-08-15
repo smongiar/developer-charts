@@ -1,14 +1,14 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: {{ .Values.component }}
+  name: {{ .Values.component }}-service
 spec:
   workspaces:
   - name: maven-repo
   - name: maven-settings
 
   params:
-    - default: https://github.com/{{ .Values.domain }}/{{ .Values.system }}-{{ .Values.component }}
+    - default: https://github.com/{{ .Values.domain }}/{{ .Values.system }}-{{ .Values.component }}-service
       name: git-url
       type: string
       description: "component source Git pepository"
