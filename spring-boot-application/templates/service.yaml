@@ -8,12 +8,14 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: {{ .Values.containerPorts.service }}
+    - name: http
+      port: 8080
       protocol: TCP
-      targetPort: {{ .Values.containerPorts.service }}
-    - port: {{ .Values.containerPorts.management }}
+      targetPort: 8080
+    - name: management
+      port: 8081
       protocol: TCP
-      targetPort: {{ .Values.containerPorts.management }}
+      targetPort: 8081
   selector:
     system: {{ .Values.system }}
     component: {{ .Values.component }}
