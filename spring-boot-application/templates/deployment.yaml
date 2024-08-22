@@ -26,7 +26,14 @@ spec:
               containerPort: 8080
             - name: management
               containerPort: 8081
+            - name: jolokia
+              containerPort: 8778
+              protocol: TCP
           env:
+            - name: AB_JOLOKIA_AUTH_OPENSHIFT
+              value: cn=hawtio-online.hawtio.svc
+            - name: AB_JOLOKIA_OPTS
+              value: caCert=/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
           resources:
             requests:
               memory: "{{ .Values.resources.requests.memory }}"
