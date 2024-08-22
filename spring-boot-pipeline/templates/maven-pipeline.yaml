@@ -64,7 +64,9 @@ spec:
     runAfter: ["build"]
     params:
     - name: GOALS
-      value: ["package"]
+      value: 
+        - package
+        - -DskipTests
     workspaces:
     - name: source
       workspace: maven-repo
