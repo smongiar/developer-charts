@@ -16,17 +16,14 @@ spec:
       name: git-revision
       type: string
       description: "component source Git revision"
-    {{- if eq .Values.deployment "jvm" }}
-    - default: ./src/main/docker/Dockerfile.jvm
-    {{- end }}
     {{- if eq .Values.deployment "native" }}
     - default: ./src/main/docker/Dockerfile.native
-    {{- end }}
-    {{- if eq .Values.deployment "legacy-jar" }}
+    {{- else if eq .Values.deployment "legacy-jar" }}
     - default: ./src/main/docker/Dockerfile.legacy-jar
-    {{- end }}
-    {{- if eq .Values.deployment "native-micro" }}
+    {{- else if eq .Values.deployment "native-micro" }}
     - default: ./src/main/docker/Dockerfile.native-micro
+    {{- else }}
+    - default: ./src/main/docker/Dockerfile.jvm
     {{- end }}
       name: dockerfilePath
       type: string
@@ -59,12 +56,14 @@ spec:
     taskRef:
       name: maven
       kind: ClusterTask
-    runAfter: ["clone"]
+    runAfter: 
+      - clone
     params:
     - name: MAVEN_IMAGE
       value: 'andyhan/quarkus-mandrel-maven:jdk-21'
     - name: GOALS
-      value: ["compile"]
+      value: 
+        - compile
     workspaces:
     - name: source
       workspace: maven-repo
@@ -92,7 +91,8 @@ spec:
         workspace: maven-settings
           
   - name: build-container-image
-    runAfter: ["package"]
+    runAfter: 
+      - package
     taskRef:
       name: buildah
       kind: ClusterTask
@@ -110,10 +110,12 @@ spec:
     taskRef:
       name: maven
       kind: ClusterTask
-    runAfter: ["clone"]
+    runAfter: 
+      - clone
     params:
     - name: GOALS
-      value: ["compile"]
+      value: 
+        - compile
     workspaces:
     - name: source
       workspace: maven-repo
@@ -124,12 +126,16 @@ spec:
     taskRef:
       name: maven
       kind: ClusterTask
-    runAfter: ["build"]
+    runAfter: 
+      - build
     params:
     - name: GOALS
       value: 
         - package
         - -DskipTests
+        {{- if eq .Values.deployment "legacy-jar" }}
+        - -Dquarkus.package.jar.type=legacy-jar
+        {{ end }}
     workspaces:
     - name: source
       workspace: maven-repo
@@ -137,7 +143,8 @@ spec:
       workspace: maven-settings
 
   - name: build-container-image
-    runAfter: ["package"]
+    runAfter: 
+      - package
     taskRef:
       name: buildah
       kind: ClusterTask
