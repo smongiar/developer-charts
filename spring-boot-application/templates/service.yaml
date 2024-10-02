@@ -4,6 +4,7 @@ metadata:
   labels:
     system: {{ .Values.system }}
     component: {{ .Values.component }}
+    'backstage.io/kubernetes-id': {{ .Values.component }}
   name: {{ .Values.component }}
 spec:
   type: ClusterIP
