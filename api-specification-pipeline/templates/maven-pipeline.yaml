@@ -1,21 +1,21 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: ${{ values.api_id }}-api
+  name: {{ .Values.component }}-api
 spec:
   description: | 
     This pipeline runs a Spectral linter against an API specification and publishes to Microcks
   params:
-  - default: https://github.com/smongiar/${{values.application.split("/")[1]}}-${{ values.api_id }}-api
+  - default: https://github.com/{{ .Values.domain }}/{{ .Values.system }}-{{ .Values.component }}-api
     name: repo-url
     type: string
   - default: main
-    name: gitRevision
+    name: git-revision
     type: string
   - default: "stoplight/spectral:6.11.1"
     name: spectral-image
     type: string
-  - default: https://raw.githubusercontent.com/smongiar/spectral-rules/main/ruleset.yaml
+  - default: https://raw.githubusercontent.com/{{ .Values.domain }}/spectral-rules/main/ruleset.yaml
     name: rules-path
     type: string
   - default: ./specification.yaml
@@ -33,11 +33,11 @@ spec:
     - name: url
       value: $(params.repo-url)
     - name: revision
-      value: "$(params.gitRevision)"
+      value: "$(params.git-revision)"
     workspaces:
     - name: output
       workspace: shared-data
-  {%- if values.mock_provider_url %}
+  {{- if .Values.mock_provider_url }}
   - name: run-spectral
     runAfter: ["fetch-source"]
     taskRef:
@@ -61,8 +61,8 @@ spec:
     workspaces:
     - name: data
       workspace: shared-data
-  {%- endif %}
-  {%- if values.service_registry_provider_url %}
+  {{- end }}
+  {{- if .Values.apicurioRegistry }}
   - name: clean-artifacts
     taskRef:
       name: maven
@@ -72,20 +72,38 @@ spec:
     params:
     - name: GOALS
       value: 
-        - dependency:purge-local-repository
+        - build-helper:remove-project-artifact
+    workspaces:
+      - name: source
+        workspace: shared-data
+      - name: maven-settings
+        workspace: maven-settings
+  - name: clean-registered-artifact
+    taskRef:
+      name: curl
+      kind: Task
+    runAfter:
+      - clean-artifacts
+    params:
+      - name: url
+        value: "{{ .Values.apicurioRegistry }}/apis/registry/v2/groups/{{ .Values.groupid }}/artifacts/{{ .Values.component }}"
+      - name: options
+        value:
+          - "-X"
+          - "DELETE"
   - name: register-apicurio
     taskRef:
       name: maven
       kind: ClusterTask
     runAfter: 
-      - clean-artifacts
+      - clean-registered-artifact
     params:
     - name: GOALS
       value: 
         - generate-sources
     workspaces:
-    - name: source
-      workspace: shared-data
-    - name: maven-settings
-      workspace: maven-settings
-  {%- endif %}
+      - name: source
+        workspace: shared-data
+      - name: maven-settings
+        workspace: maven-settings
+  {{- end }}

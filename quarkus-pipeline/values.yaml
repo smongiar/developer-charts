@@ -3,5 +3,9 @@ system: default-application
 component: default-service
 deployment: jvm
 
+git:
+  host: github.com
+  branch: main
+
 image:
   registry: image-registry.openshift-image-registry.svc:5000
