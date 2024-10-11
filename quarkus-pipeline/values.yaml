@@ -1,4 +1,4 @@
-domain: contract-first-idp
+domain: smongiar
 system: default-application
 component: default-service
 deployment: jvm
