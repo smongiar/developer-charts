@@ -1,12 +1,12 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: ${{ values.api_id }}-api
+  name: {{ .Values.component }}-api
 spec:
   description: | 
     This pipeline runs a Spectral linter against an API specification and publishes to Microcks
   params:
-  - default: https://github.com/smongiar/${{values.application.split("/")[1]}}-${{ values.api_id }}-api
+  - default: https://github.com/smongiar/{{ .Values.system }}.split("/")[1]}}-{{ .Values.component }}-api
     name: repo-url
     type: string
   - default: main
@@ -37,7 +37,7 @@ spec:
     workspaces:
     - name: output
       workspace: shared-data
-  {%- if values.mock_provider_url %}
+  {{- if .Values.mock_provider_url }}
   - name: run-spectral
     runAfter: ["fetch-source"]
     taskRef:
@@ -61,8 +61,8 @@ spec:
     workspaces:
     - name: data
       workspace: shared-data
-  {%- endif %}
-  {%- if values.service_registry_provider_url %}
+  {{- end }}
+  {{- if .Values.service_registry_provider_url }}
   - name: clean-artifacts
     taskRef:
       name: maven
@@ -88,4 +88,4 @@ spec:
       workspace: shared-data
     - name: maven-settings
       workspace: maven-settings
-  {%- endif %}
+  {{- end }}

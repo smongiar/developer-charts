@@ -1,0 +1,13 @@
+domain: contract-first-idp
+system: default-application
+component: default-service
+
+git:
+  host: github.com
+  branch: main
+
+service_registry_provider_url: http://apicurio-registry.example.com
+mock_provider_url:  https://microcks-microcks.example.com
+
+image:
+  registry: image-registry.openshift-image-registry.svc:5000
