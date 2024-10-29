@@ -1,0 +1,41 @@
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: {{ .Values.component }}-run-pipeline
+spec:
+  params:
+    - name: git-revision
+      description: The git revision
+    - name: git-url
+      description: The repo url
+    - name: image
+      description: reference of the image that will get created
+    - name: version
+      description: tag of the image that will get created
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: {{ .Values.component }}
+        labels:
+          backstage.io/kubernetes-id: {{ .Values.component }}
+      spec:
+        params:
+          - name: git-url
+            value: $(tt.params.git-url)
+          - name: git-revision
+            value: $(tt.params.git-revision)
+          - name: image
+            value: $(tt.params.image)
+          - name: version
+            value: $(tt.params.version)
+        pipelineRef:
+          name: {{ .Values.component }}-service
+        spec:
+          workspaces:
+            - name: maven-repo
+              persistentVolumeClaim: {{ .Values.component }}-mvn-repo
+            - name: maven-settings
+              persistentVolumeClaim: {{ .Values.component }}-mvn-settings
+
