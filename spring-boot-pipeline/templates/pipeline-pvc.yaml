@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.component }}-mvn-repo
+  name: {{ .Values.component }}-maven-repo
 spec:
   resources:
     requests:
@@ -14,7 +14,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.component }}-mvn-settings
+  name: {{ .Values.component }}-maven-settings
 spec:
   resources:
     requests:
