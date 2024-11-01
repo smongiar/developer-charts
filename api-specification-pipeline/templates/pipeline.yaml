@@ -6,7 +6,7 @@ spec:
   description: | 
     This pipeline runs a Spectral linter against an API specification and publishes to Microcks
   params:
-  - default: https://github.com/smongiar/{{ .Values.system }}.split("/")[1]}}-{{ .Values.component }}-api
+  - default: https://github.com/smongiar/{{ .Values.system }}-{{ .Values.component }}-api
     name: repo-url
     type: string
   - default: main
@@ -73,6 +73,12 @@ spec:
     - name: GOALS
       value: 
         - dependency:purge-local-repository
+        - '-DreResolve=false'
+    workspaces:
+      - name: source
+        workspace: shared-data
+      - name: maven-settings
+        workspace: maven-settings
   - name: register-apicurio
     taskRef:
       name: maven
