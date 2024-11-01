@@ -91,11 +91,6 @@ spec:
         value:
           - "-X"
           - "DELETE"
-    workspaces:
-      - name: source
-        workspace: shared-data
-      - name: maven-settings
-        workspace: maven-settings
   - name: register-apicurio
     taskRef:
       name: maven
