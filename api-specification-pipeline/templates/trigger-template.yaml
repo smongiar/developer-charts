@@ -39,6 +39,5 @@ spec:
         workspaces:
           - name: shared-data
             persistentVolumeClaim: {{ .Values.component }}-shared-data
-        #  - name: maven-settings
-        #    persistentVolumeClaim: {{ .Values.component }}-maven-settings
+
 
