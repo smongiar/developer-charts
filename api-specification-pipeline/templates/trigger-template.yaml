@@ -24,20 +24,20 @@ spec:
           backstage.io/kubernetes-id: {{ .Values.component }}-api
       spec:
         params:
-        - name: repo-url
-          value: $(tt.params.repo-url)
-        - name: git-revision
-          value: $(tt.params.git-revision)
-        - name: spectral-image
-          value: $(tt.params.spectral-image)
-        - name: rules-path
-          value: $(tt.params.rules-path)
-        - name: api-path
-          value: $(tt.params.api-path)
+          - name: repo-url
+            value: $(tt.params.repo-url)
+          - name: git-revision
+            value: $(tt.params.git-revision)
+          - name: spectral-image
+            value: $(tt.params.spectral-image)
+          - name: rules-path
+            value: $(tt.params.rules-path)
+          - name: api-path
+            value: $(tt.params.api-path)
         pipelineRef:
           name: {{ .Values.component }}-api
         workspaces:
-          - name: shared-data
+          - name: source
             persistentVolumeClaim: {{ .Values.component }}-shared-data
           - name: maven-settings
             persistentVolumeClaim: {{ .Values.component }}-maven-settings
