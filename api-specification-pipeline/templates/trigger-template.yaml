@@ -38,6 +38,7 @@ spec:
           name: {{ .Values.component }}-api
         workspaces:
           - name: shared-data
-            persistentVolumeClaim: {{ .Values.component }}-shared-data
+            emptyDir: {}
+
 
 
