@@ -1,0 +1,34 @@
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: {{ .Values.component }}-el
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    - bindings:
+        - kind: ClusterTriggerBinding
+          ref: github-push
+      interceptors:
+        - params:
+          - name: secretRef
+            value:
+              secretKey: secret
+              secretName: {{ .Values.component }}-webhook-secret
+          ref:
+            name: github
+        - params:
+            - name: eventTypes
+              value: ["Push Hook"]
+          ref:
+            name: github
+        - params:
+            - name: git-revision
+              value: >-
+                (body.ref.contains('{{ .Values.git.branch }}'))
+            - name: overlays
+              value: null
+          ref:
+            name: cel
+      template:
+        ref: {{ .Values.component }}-run-pipeline
