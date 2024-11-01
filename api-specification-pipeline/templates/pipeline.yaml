@@ -79,12 +79,14 @@ spec:
       - name: maven-settings
         workspace: maven-settings
   - name: clean-registered-artifact
+    taskRef:
+      name: curl
+      kind: Task
+    runAfter:
+      - fetch-source
     params:
-      - taskRef:
-          name: curl
-          kind: Task
       - name: url
-        value: http://{{ .Values.service_registry_provider_url }}/apis/registry/v2/groups/{{ .Values.groupid }}t/artifacts/{{ .Values.component }}
+        value: http://{{ .Values.service_registry_provider_url }}/apis/registry/v2/groups/{{ .Values.groupid }}/artifacts/{{ .Values.component }}
       - name: options
         value:
           - "-X"
