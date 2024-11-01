@@ -7,7 +7,7 @@ git:
   host: github.com
   branch: main
 
-apicurioRegistry: apicurio-registry.apicurio-registry.router-default.apps.cluster-56dmd.56dmd
+apicurioRegistry:  apicurio-registry.apicurio-registry.router-default.apps.cluster-56dmd.56dmd.sandbox2864.opentlc.com
 mockRegistry: microcks-microcks.apps.cluster-56dmd.56dmd.sandbox2864.opentlc.com
 
 image:
