@@ -7,8 +7,8 @@ git:
   host: github.com
   branch: main
 
-service_registry_provider_url: http://apicurio-registry.example.com
-mock_provider_url:  https://microcks-microcks.example.com
+apicurioRegistry: apicurio-registry.apicurio-registry.router-default.apps.cluster-56dmd.56dmd
+mockRegistry: microcks-microcks.apps.cluster-56dmd.56dmd.sandbox2864.opentlc.com
 
 image:
   registry: image-registry.openshift-image-registry.svc:5000
