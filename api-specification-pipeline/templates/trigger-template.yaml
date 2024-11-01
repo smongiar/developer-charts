@@ -38,7 +38,9 @@ spec:
           name: {{ .Values.component }}-api
         workspaces:
           - name: shared-data
-            emptyDir: {}
+            persistentVolumeClaim: {{ .Values.component }}-shared-data
+          - name: maven-settings
+            persistentVolumeClaim: {{ .Values.component }}-maven-settings
 
 
 
