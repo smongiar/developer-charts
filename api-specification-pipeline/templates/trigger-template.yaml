@@ -2,7 +2,7 @@
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
-  name: {{ .Values.component }}-run-pipeline
+  name: {{ .Values.component }}-api-run-pipeline
 spec:
   params:
     - name: git-revision
@@ -19,7 +19,7 @@ spec:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        generateName: {{ .Values.component }}-api
+        generateName: {{ .Values.component }}-api-triggered
         labels:
           backstage.io/kubernetes-id: {{ .Values.component }}-api
       spec:
@@ -36,10 +36,9 @@ spec:
             value: $(tt.params.api-path)
         pipelineRef:
           name: {{ .Values.component }}-api
-        spec:
-          workspaces:
-            - name: shared-data
-              persistentVolumeClaim: {{ .Values.component }}-shared-data
-            - name: maven-settings
-              persistentVolumeClaim: {{ .Values.component }}-maven-settings
+        workspaces:
+          - name: shared-data
+            persistentVolumeClaim: {{ .Values.component }}-shared-data
+          - name: maven-settings
+            persistentVolumeClaim: {{ .Values.component }}-maven-settings
 
