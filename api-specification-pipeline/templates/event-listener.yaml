@@ -10,18 +10,6 @@ spec:
         - kind: ClusterTriggerBinding
           ref: github-push
       interceptors:
-#        - params:
-#          - name: secretRef
-#            value:
-#              secretKey: secret
-#              secretName: {{ .Values.component }}-webhook-secret
-#          ref:
-#            name: github
-#        - params:
-#            - name: eventTypes
-#              value: ["Push Hook"]
-#          ref:
-#            name: github
         - params:
             - name: git-revision
               value: >-

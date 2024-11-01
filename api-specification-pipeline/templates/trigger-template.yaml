@@ -37,7 +37,14 @@ spec:
         pipelineRef:
           name: {{ .Values.component }}-api
         workspaces:
-          - name: shared-data
-            persistentVolumeClaim: {{ .Values.component }}-shared-data
+          - name: source
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 1Gi
+
 
 
