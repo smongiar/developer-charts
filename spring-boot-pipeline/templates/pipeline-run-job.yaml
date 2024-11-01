@@ -18,7 +18,7 @@ spec:
               - /bin/sh
               - -c
               - |
-                tkn pipeline start {{ .Values.component }}-service -w name=maven-repo,claimName={{ .Values.component }}-maven-repo -w name=maven-settings,claimName={{ .Values.component }}-maven-settings
+                tkn pipeline start {{ .Values.component }}-service -w name=maven-repo,claimName={{ .Values.component }}-maven-repo -w name=maven-settings,claimName={{ .Values.component }}-maven-settings --use-param-defaults
             env:
               - name: HOME
                 value: /tekton/home
