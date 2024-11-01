@@ -7,14 +7,19 @@ spec:
   params:
     - name: git-revision
       description: The git revision
+      default: main
     - name: repo-url
       description: The repo url
+      default: https://github.com/smongiar/{{ .Values.system }}-{{ .Values.component }}-api
     - name: spectral-image
       description: reference of the spectral image
+      default: "stoplight/spectral:6.11.1"
     - name: rules-path
       description: reference of ruleset.yaml
+      default: https://raw.githubusercontent.com/smongiar/spectral-rules/main/ruleset.yaml
     - name: api-path
       description: reference of specification.yaml
+      default: ./specification.yaml
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
@@ -36,9 +41,6 @@ spec:
             value: $(tt.params.api-path)
         pipelineRef:
           name: {{ .Values.component }}-api
-        podTemplate:
-          securityContext:
-            fsGroup: 65532
         serviceAccountName: pipeline
         workspaces:
           - name: shared-data
