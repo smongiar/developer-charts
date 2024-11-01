@@ -36,7 +36,7 @@ spec:
           value: $(tt.params.api-path)
         pipelineRef:
           name: {{ .Values.component }}-api
-          workspaces:
+        workspaces:
           - name: shared-data
             persistentVolumeClaim: {{ .Values.component }}-shared-data
           - name: maven-settings
