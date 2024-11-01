@@ -10,7 +10,7 @@ spec:
       default: main
     - name: repo-url
       description: The repo url
-      default: https://github.com/smongiar/{{ .Values.system }}-{{ .Values.component }}-api
+      default: https://github.com/{{ .Values.domain }}/{{ .Values.system }}-{{ .Values.component }}-api
     - name: spectral-image
       description: reference of the spectral image
       default: "stoplight/spectral:6.11.1"
@@ -59,7 +59,4 @@ spec:
                 resources:
                   requests:
                     storage: 1Gi
-
-
-
 
