@@ -39,7 +39,7 @@ spec:
         podTemplate:
           securityContext:
             fsGroup: 65532
-          serviceAccountName: pipeline
+        serviceAccountName: pipeline
         workspaces:
           - name: shared-data
             volumeClaimTemplate:
