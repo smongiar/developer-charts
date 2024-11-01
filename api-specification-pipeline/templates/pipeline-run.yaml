@@ -18,7 +18,7 @@ spec:
               - /bin/sh
               - -c
               - |
-                tkn pipeline start {{ .Values.component }}-api -w name=shared-data,claimName={{ .Values.component }}-shared-data -w name=maven-settings,claimName={{ .Values.component }}-maven-settings --use-param-defaults
+                tkn hub install task curl && tkn pipeline start {{ .Values.component }}-api -w name=shared-data,claimName={{ .Values.component }}-shared-data -w name=maven-settings,claimName={{ .Values.component }}-maven-settings --use-param-defaults
             env:
               - name: HOME
                 value: /tekton/home
