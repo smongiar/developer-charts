@@ -37,7 +37,7 @@ spec:
         pipelineRef:
           name: {{ .Values.component }}-service
         workspaces:
-          - name: shared-data
+          - name: maven-repo
             volumeClaimTemplate:
               spec:
                 accessModes:
