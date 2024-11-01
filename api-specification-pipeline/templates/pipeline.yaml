@@ -83,7 +83,7 @@ spec:
       name: curl
       kind: Task
     runAfter:
-      - fetch-source
+      - clean-artifacts
     params:
       - name: url
         value: "{{ .Values.apicurioRegistry }}/apis/registry/v2/groups/{{ .Values.groupid }}/artifacts/{{ .Values.component }}"
@@ -96,7 +96,7 @@ spec:
       name: maven
       kind: ClusterTask
     runAfter: 
-      - clean-artifacts
+      - clean-registered-artifact
     params:
     - name: GOALS
       value: 
