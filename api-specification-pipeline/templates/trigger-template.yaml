@@ -37,7 +37,9 @@ spec:
         pipelineRef:
           name: {{ .Values.component }}-api
         workspaces:
-          - name: source
+          - name: shared-data
+            emptyDir: {}
+          - name: maven-settings
             emptyDir: {}
 
 
