@@ -18,7 +18,7 @@ spec:
               - /bin/sh
               - -c
               - |
-                tkn pipeline start {{ .Values.component }}-api -w name=shared-data,claimName={{ .Values.component }}-shared-data -w name=maven-settings,claimName={{ .Values.component }}-maven-settings --use-param-defaults
+                curl -X DELETE --silent http://{{ .Values.service_registry_provider_url }}/apis/registry/v2/groups/{{ .Values.groupid }}t/artifacts/{{ .Values.component }} && tkn pipeline start {{ .Values.component }}-api -w name=shared-data,claimName={{ .Values.component }}-shared-data -w name=maven-settings,claimName={{ .Values.component }}-maven-settings --use-param-defaults
             env:
               - name: HOME
                 value: /tekton/home

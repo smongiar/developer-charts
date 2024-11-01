@@ -1,6 +1,7 @@
 domain: contract-first-idp
 system: default-application
 component: default-service
+groupid: com.redhat
 
 git:
   host: github.com
