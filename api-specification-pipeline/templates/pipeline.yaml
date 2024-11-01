@@ -73,6 +73,11 @@ spec:
     - name: GOALS
       value: 
         - dependency:purge-local-repository
+    workspaces:
+      - name: source
+        workspace: shared-data
+      - name: maven-settings
+        workspace: maven-settings
   - name: register-apicurio
     taskRef:
       name: maven
