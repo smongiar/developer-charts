@@ -7,17 +7,21 @@ spec:
   params:
     - name: git-revision
       description: The git revision
+      default: main	
     - name: git-url
       description: The repo url
+      default: https://github.com/{{ .Values.domain }}/{{ .Values.system }}-{{ .Values.component }}-service 
     - name: image
       description: reference of the image that will get created
+      default: {{ .Values.image.registry }}/{{ .Values.system }}-dev/{{ .Values.component }}
     - name: version
       description: tag of the image that will get created
+      default: latest
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        generateName: {{ .Values.component }}
+        generateName: {{ .Values.component }}-triggered
         labels:
           backstage.io/kubernetes-id: {{ .Values.component }}
       spec:
@@ -33,8 +37,20 @@ spec:
         pipelineRef:
           name: {{ .Values.component }}-service
         workspaces:
-          - name: maven-repo
-            persistentVolumeClaim: {{ .Values.component }}-maven-repo
+          - name: shared-data
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 1Gi
           - name: maven-settings
-            persistentVolumeClaim: {{ .Values.component }}-maven-settings
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 1Gi
 
