@@ -10,7 +10,7 @@ spec:
     name: repo-url
     type: string
   - default: main
-    name: gitRevision
+    name: git-revision
     type: string
   - default: "stoplight/spectral:6.11.1"
     name: spectral-image
@@ -33,7 +33,7 @@ spec:
     - name: url
       value: $(params.repo-url)
     - name: revision
-      value: "$(params.gitRevision)"
+      value: "$(params.git-revision)"
     workspaces:
     - name: output
       workspace: shared-data
