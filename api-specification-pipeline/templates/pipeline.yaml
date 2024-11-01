@@ -72,7 +72,7 @@ spec:
     params:
     - name: GOALS
       value: 
-        - dependency:purge-local-repository
+        - dependency:purge-local-repository -DreResolve=false
     workspaces:
       - name: source
         workspace: shared-data
