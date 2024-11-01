@@ -2,7 +2,7 @@
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: webhook-{{ .Values.component }}-api-el
+  name: webhook-{{ .Values.system }}-{{ .Values.component }}-api-el
   labels:
     app.kubernetes.io/managed-by: EventListener
     app.kubernetes.io/part-of: Triggers
