@@ -41,9 +41,6 @@ spec:
             value: $(tt.params.api-path)
         pipelineRef:
           name: {{ .Values.component }}-api
-        podTemplate:
-          securityContext:
-            fsGroup: 65532
         serviceAccountName: pipeline
         workspaces:
           - name: shared-data
