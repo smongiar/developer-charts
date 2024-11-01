@@ -32,10 +32,9 @@ spec:
             value: $(tt.params.version)
         pipelineRef:
           name: {{ .Values.component }}-service
-        spec:
-          workspaces:
-            - name: maven-repo
-              persistentVolumeClaim: {{ .Values.component }}-maven-repo
-            - name: maven-settings
-              persistentVolumeClaim: {{ .Values.component }}-maven-settings
+        workspaces:
+          - name: maven-repo
+            persistentVolumeClaim: {{ .Values.component }}-maven-repo
+          - name: maven-settings
+            persistentVolumeClaim: {{ .Values.component }}-maven-settings
 
