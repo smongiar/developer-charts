@@ -103,7 +103,7 @@ spec:
         - generate-sources
     workspaces:
       - name: source
-      #  workspace: shared-data
+        workspace: shared-data
       - name: maven-settings
-      #  workspace: maven-settings
+        workspace: maven-settings
   {{- end }}
