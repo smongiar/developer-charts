@@ -86,7 +86,7 @@ spec:
       - fetch-source
     params:
       - name: url
-        value: http://{{ .Values.service_registry_provider_url }}/apis/registry/v2/groups/{{ .Values.groupid }}/artifacts/{{ .Values.component }}
+        value: "{{ .Values.service_registry_provider_url }}/apis/registry/v2/groups/{{ .Values.groupid }}/artifacts/{{ .Values.component }}"
       - name: options
         value:
           - "-X"
