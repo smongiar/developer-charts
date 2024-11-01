@@ -72,8 +72,7 @@ spec:
     params:
     - name: GOALS
       value: 
-        - dependency:purge-local-repository
-        - '-DreResolve=false'
+        - build-helper:remove-project-artifact
     workspaces:
       - name: source
         workspace: shared-data
