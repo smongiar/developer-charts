@@ -35,7 +35,7 @@ spec:
         spec:
           workspaces:
             - name: maven-repo
-              persistentVolumeClaim: {{ .Values.component }}-mvn-repo
+              persistentVolumeClaim: {{ .Values.component }}-maven-repo
             - name: maven-settings
-              persistentVolumeClaim: {{ .Values.component }}-mvn-settings
+              persistentVolumeClaim: {{ .Values.component }}-maven-settings
 
