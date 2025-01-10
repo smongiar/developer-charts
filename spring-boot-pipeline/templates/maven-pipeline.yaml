@@ -52,7 +52,9 @@ spec:
     runAfter: ["clone"]
     params:
     - name: GOALS
-      value: ["compile"]
+      value: 
+        - compile
+        - '-B'
     workspaces:
     - name: source
       workspace: maven-repo
@@ -69,6 +71,7 @@ spec:
       value: 
         - package
         - -DskipTests
+        - '-B'
     workspaces:
     - name: source
       workspace: maven-repo

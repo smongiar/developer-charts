@@ -66,6 +66,7 @@ spec:
     - name: GOALS
       value: 
         - compile
+        - '-B'
     workspaces:
     - name: source
       workspace: maven-repo
@@ -81,6 +82,7 @@ spec:
           - package
           - '-DskipTests'
           - '-Pnative'
+          - '-B'
     runAfter:
       - build
     taskRef:
@@ -118,6 +120,7 @@ spec:
     - name: GOALS
       value: 
         - compile
+        - '-B'
     workspaces:
     - name: source
       workspace: maven-repo
@@ -135,6 +138,7 @@ spec:
       value: 
         - package
         - -DskipTests
+        - '-B'
         {{- if eq .Values.deployment "legacy-jar" }}
         - -Dquarkus.package.jar.type=legacy-jar
         {{ end }}
