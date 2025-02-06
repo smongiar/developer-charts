@@ -32,8 +32,6 @@ spec:
         rm -rf pull-request-workdir
         git clone $(params.GIT_REPOSITORY) pull-request-workdir
         cd pull-request-workdir
-        #git config user.email "pipelines-ci@redhat.com"
-        #git config user.name "pipelines-ci"
 
         branch_name=promoting-$(context.taskRun.name)-to-$(params.COPY_TO)-$(context.taskRun.uid)
         git checkout -b $branch_name
@@ -47,39 +45,3 @@ spec:
 
         git remote add auth-origin $(echo $(params.GIT_REPOSITORY))
         git push -u auth-origin HEAD
-
-    - name: create-pull-request
-      workingDir: $(workspaces.workspace.path)
-      image: quay.io/siamaksade/python-oc
-      script: |
-        #!/usr/bin/env python3
-
-        import os
-        import requests 
-
-        #gitea_user = "$(params.GIT_USERNAME)"
-        #gitea_pwd = "$(params.GIT_PASSWORD)"
-        giteaURL = "https://$(params.GIT_HOST)"
-        
-        branch_result = open("$(results.branch_name.path)")
-        git_branch = branch_result.read()
-        branch_result.close()
-
-        print("Git server: " + giteaURL)
-        print("Branch name: " + git_branch)
-
-        pr_title = "[$(context.taskRun.name)] Promote to STAGING (QA) environment"
-        pr_body = "TaskRun $(context.taskRun.name)\\nPromoting application from DEV to QA environment"
-        data_pr = '{"base": "{{ .Values.pipeline.manifest.branch }}","body": "' + pr_body + '","head": "' + git_branch + '","title": "' + pr_title + '"}'
-        headers = {'Content-Type': 'application/json'}
-        resp = requests.post(url = giteaURL + "/api/v1/repos/" + gitea_user + "/{{ .Values.pipeline.webhook.github.repo }}-config/pulls", 
-                            headers = headers, 
-                            auth = (gitea_user, gitea_pwd), 
-                            data = data_pr) 
-        
-        
-        if resp.status_code != 201:
-          print("Error creating pull-request (status code: {})".format(resp.status_code))
-          print(resp.content)
-        else:
-          print("Created pull-request.")
