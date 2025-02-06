@@ -13,7 +13,7 @@ spec:
         - params:
             - name: git-revision
               value: >-
-                (body.ref.contains('{{ .Values.git.branch }}'))
+                (body.ref.contains('{{ .Values.git.branch }}') || body.ref.contains('staging') || body.ref.contains('production'))
             - name: overlays
               value: null
           ref:
