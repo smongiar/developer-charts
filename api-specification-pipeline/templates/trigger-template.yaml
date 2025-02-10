@@ -13,7 +13,7 @@ spec:
       default: https://github.com/{{ .Values.domain }}/{{ .Values.system }}-{{ .Values.component }}-api
     - name: spectral-image
       description: reference of the spectral image
-      default: "stoplight/spectral:6.11.1"
+      default: "mirror.gcr.io/stoplight/spectral:6.11.1"
     - name: rules-path
       description: reference of ruleset.yaml
       default: https://raw.githubusercontent.com/{{ .Values.domain }}/spectral-rules/main/ruleset.yaml
