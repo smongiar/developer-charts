@@ -13,9 +13,9 @@ spec:
   params:
     - name: GIT_REPOSITORY
       type: string
-    - name: COPY_FROM
+    - name: COPY_FROM_PATH
       type: string
-    - name: COPY_TO
+    - name: COPY_TO_PATH
       type: string
   workspaces:
     - description: The workspace consisting of maven project.
