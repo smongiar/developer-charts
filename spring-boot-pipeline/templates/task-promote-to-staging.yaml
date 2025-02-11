@@ -37,8 +37,6 @@ spec:
         git checkout -b $branch_name
         echo -n "$branch_name" > $(results.branch_name.path)
 
-        #/bin/cp -rf $(params.COPY_FROM_PATH)/* $(params.COPY_TO_PATH)
-
         git status
         git add $(params.COPY_TO_PATH)
         git commit -m "[$(context.taskRun.name)] Promotion from $(params.COPY_FROM_PATH) to $(params.COPY_TO_PATH)"
