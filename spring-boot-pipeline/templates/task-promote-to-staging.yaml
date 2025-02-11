@@ -13,9 +13,9 @@ spec:
   params:
     - name: GIT_REPOSITORY
       type: string
-    - name: COPY_FROM
+    - name: COPY_FROM_PATH
       type: string
-    - name: COPY_TO
+    - name: COPY_TO_PATH
       type: string
   workspaces:
     - description: The workspace consisting of maven project.
@@ -33,7 +33,7 @@ spec:
         git clone $(params.GIT_REPOSITORY) pull-request-workdir
         cd pull-request-workdir
 
-        branch_name=promoting-$(context.taskRun.name)-to-$(params.COPY_TO)-$(context.taskRun.uid)
+        branch_name=promoting-$(context.taskRun.name)-to-$(params.COPY_TO_PATH)-$(context.taskRun.uid)
         git checkout -b $branch_name
         echo -n "$branch_name" > $(results.branch_name.path)
 
