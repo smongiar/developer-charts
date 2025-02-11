@@ -81,8 +81,6 @@ spec:
         value:
           - install
           - sonar:sonar
-          - -f
-          - {{ .Values.component }}
           - -Dsonar.host.url=http://sonar-sonarqube:9000
           - -Dsonar.userHome=/tmp/sonar
           - -DskipTests=true
