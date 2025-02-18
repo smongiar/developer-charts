@@ -25,7 +25,7 @@ spec:
       description: The branch name used for pull-request
   steps:
     - name: promote
-      image: docker.io/alpine/git:v2.26.2
+      image: mirror.gcr.io/alpine/git:v2.26.2
       workingDir: $(workspaces.maven-repo.path)
       script: |
         set -x
