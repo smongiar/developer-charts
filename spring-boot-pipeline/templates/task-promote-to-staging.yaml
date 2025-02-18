@@ -33,13 +33,19 @@ spec:
         git clone $(params.GIT_REPOSITORY) pull-request-workdir
         cd pull-request-workdir
 
-        branch_name=promoting-$(context.taskRun.name)-to-$(params.COPY_TO_PATH)-$(context.taskRun.uid)
+        branch_name=staging
         git checkout -b $branch_name
+        staging_exists=`git show-ref refs/heads/staging`
+        if [ -n "$staging_exists" ]; then
+          echo 'branch exists!'
+        elif
+          git checkout -b staging
+          git push origin +staging
+        fi
         echo -n "$branch_name" > $(results.branch_name.path)
 
         git status
-        git add $(params.COPY_TO_PATH)
-        git commit -m "[$(context.taskRun.name)] Promotion from $(params.COPY_FROM_PATH) to $(params.COPY_TO_PATH)"
+        git add .
+        git commit -m "[$(context.taskRun.name)] Promotion from dev to staging (qa)"
 
-        git remote add auth-origin $(echo $(params.GIT_REPOSITORY))
-        git push -u auth-origin HEAD
+        git push origin $branch_name
