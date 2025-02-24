@@ -33,7 +33,7 @@ spec:
         git clone $(params.GIT_REPOSITORY) pull-request-workdir
         cd pull-request-workdir
 
-        branch_name=promote-$(context.taskRun.name)-to-staging
+        branch_name=staging
         git checkout -b $branch_name
         staging_exists=`git show-ref refs/heads/staging`
         if [ -n "$staging_exists" ]; then
