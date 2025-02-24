@@ -30,22 +30,31 @@ spec:
       script: |
         set -x
         rm -rf pull-request-workdir
-        git clone $(params.GIT_REPOSITORY) pull-request-workdir
-        cd pull-request-workdir
-
-        branch_name=staging
-        git checkout -b $branch_name
-        staging_exists=`git show-ref refs/heads/staging`
-        if [ -n "$staging_exists" ]; then
-          echo 'branch exists!'
-        elif
-          git checkout -b staging
-          git push origin +staging
+        export sonarlink=$(awk 'match($0,/ceTaskUrl=[\s\S]*.+/){print substr($0,RSTART+10,RLENGTH-10)}' target/sonar/report-task.txt)
+        wget $sonarlink
+        mv task* sonar-result.txt
+        export result=$(awk 'match($0,/"status":"[A-Z]+/){print substr($0,RSTART+10,RLENGTH-10)}' sonar-result.txt)
+        
+        if [ "$result" != "SUCCESS" ]; then
+          echo "Quality Gate not passed"
+          exit 1
+        else 
+          git clone $(params.GIT_REPOSITORY) pull-request-workdir
+          cd pull-request-workdir
+        
+          branch_name=staging
+          staging_exists=`git show-ref refs/heads/staging`
+          if [ -n "$staging_exists" ]; then
+            echo 'branch exists!'
+          elif
+            git checkout -b staging
+            git push origin +staging
+          fi
+          echo -n "$branch_name" > $(results.branch_name.path)
+        
+          git status
+          git add .
+          git commit -m "[$(context.taskRun.name)] Promotion from dev to staging (qa)"
+        
+          git push origin $branch_name
         fi
-        echo -n "$branch_name" > $(results.branch_name.path)
-
-        git status
-        git add .
-        git commit -m "[$(context.taskRun.name)] Promotion from dev to staging (qa)"
-
-        git push origin $branch_name
