@@ -53,7 +53,7 @@ spec:
           branch_name=staging
           staging_exists=`git show-ref refs/heads/staging`
           if [ -n "$staging_exists" ]; then
-            echo 'branch exists!'
+            echo 'branch exists!'            
           else
             git checkout -b staging
             git push origin +staging
