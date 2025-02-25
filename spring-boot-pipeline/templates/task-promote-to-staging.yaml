@@ -55,9 +55,12 @@ spec:
           if [ -n "$staging_exists" ]; then
             echo 'branch exists!'            
           else
+            echo "checkout to new staging branch"
             git checkout -b staging
+            echo "push to staging branch"
             git push origin +staging
           fi
+          echo "fulling results branch_name"
           echo -n "$branch_name" > $(results.branch_name.path)
         
           git status
