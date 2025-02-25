@@ -35,6 +35,14 @@ spec:
         mv task* sonar-result.txt
         export result=$(awk 'match($0,/"status":"[A-Z]+/){print substr($0,RSTART+10,RLENGTH-10)}' sonar-result.txt)
         
+        while [ "$result" == "IN_PROGRESS" ]; do
+          sleep 60
+          export sonarlink=$(awk 'match($0,/ceTaskUrl=[\s\S]*.+/){print substr($0,RSTART+10,RLENGTH-10)}' target/sonar/report-task.txt)
+          wget $sonarlink
+          mv task* sonar-result.txt
+          export result=$(awk 'match($0,/"status":"[A-Z]+/){print substr($0,RSTART+10,RLENGTH-10)}' sonar-result.txt)
+        done
+        
         if [ "$result" != "SUCCESS" ]; then
           echo "Quality Gate not passed"
           exit 1
@@ -45,8 +53,8 @@ spec:
           branch_name=staging
           staging_exists=`git show-ref refs/heads/staging`
           if [ -n "$staging_exists" ]; then
-            echo 'branch exists!'
-          elif
+            echo 'branch exists!'            
+          else
             git checkout -b staging
             git push origin +staging
           fi
