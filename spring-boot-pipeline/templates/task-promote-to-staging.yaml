@@ -49,16 +49,17 @@ spec:
         else 
           git clone $(params.GIT_REPOSITORY) pull-request-workdir
           cd pull-request-workdir
+          git checkout main
         
           branch_name=staging
           staging_exists=`git show-ref refs/heads/staging`
           if [ -n "$staging_exists" ]; then
-            echo 'branch exists!'            
+            echo "branch exists";            
           else
-            echo "checkout to new staging branch"
-            git checkout -b staging
-            echo "push to staging branch"
-            git push origin +staging
+            echo "checkout to new staging branch";
+            git checkout -b staging;
+            echo "push to staging branch";
+            git push origin +staging;
           fi
           echo "fulling results branch_name"
           echo -n "$branch_name" > $(results.branch_name.path)
