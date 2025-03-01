@@ -25,7 +25,7 @@ spec:
       description: The branch name used for pull-request
   steps:
     - name: promote
-      image: mirror.gcr.io/alpine/git:v2.26.2
+      #image: mirror.gcr.io/alpine/git:v2.26.2
       workingDir: $(workspaces.maven-repo.path)
       script: |
         set -x
@@ -47,19 +47,18 @@ spec:
           echo "Quality Gate not passed"
           exit 1
         else 
-          git clone $(params.GIT_REPOSITORY) pull-request-workdir
-          cd pull-request-workdir
+          cd /workspace/output/$(params.GIT_REPOSITORY)
           git checkout main
         
           branch_name=staging
-          staging_exists=`git show-ref refs/heads/staging`
+          export staging_exists=$(git show-ref refs/heads/staging)
           if [ -n "$staging_exists" ]; then
-            echo "branch exists";            
+            echo "branch exists"            
           else
-            echo "checkout to new staging branch";
-            git checkout -b staging;
-            echo "push to staging branch";
-            git push origin +staging;
+            echo "checkout to new staging branch"
+            git checkout -b staging
+            echo "push to staging branch"
+            git push origin +staging
           fi
           echo "fulling results branch_name"
           echo -n "$branch_name" > $(results.branch_name.path)
