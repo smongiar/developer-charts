@@ -108,7 +108,7 @@ spec:
         operator: in
         values: [ "refs/heads/main" ]
     runAfter:
-      - package
+      - code-analysis
     taskRef:
       name: create-promote-pull-request
     params:
