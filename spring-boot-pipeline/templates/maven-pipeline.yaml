@@ -102,8 +102,11 @@ spec:
       - name: COPY_TO_PATH
         value: "environments/sta"
     workspaces:
-      - name: maven-repo
+      - name: source
         workspace: maven-repo
+      - name: output
+        workspace: maven-repo
+
 
   - name: package
     taskRef:
