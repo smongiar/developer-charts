@@ -26,7 +26,7 @@ spec:
   steps:
     - name: promote
       #image: mirror.gcr.io/alpine/git:v2.26.2
-      workingDir: $(workspaces.source.path)
+      workingDir: $(workspaces.maven-repo.path)
       script: |
         set -x
         rm -rf pull-request-workdir
