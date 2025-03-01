@@ -19,14 +19,14 @@ spec:
       type: string
   workspaces:
     - description: The workspace consisting of maven project.
-      name: maven-repo
+      name: source
   results:
     - name: branch_name
       description: The branch name used for pull-request
   steps:
     - name: promote
       #image: mirror.gcr.io/alpine/git:v2.26.2
-      workingDir: $(workspaces.maven-repo.path)
+      workingDir: $(workspaces.source.path)
       script: |
         set -x
         rm -rf pull-request-workdir
