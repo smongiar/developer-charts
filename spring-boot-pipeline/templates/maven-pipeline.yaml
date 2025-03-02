@@ -121,8 +121,6 @@ spec:
     workspaces:
       - name: maven-repo
         workspace: maven-repo
-      - name: output
-        workspace: maven-repo
 
   - name: build-container-image
     runAfter: ["package"]
