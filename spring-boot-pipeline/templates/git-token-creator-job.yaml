@@ -1,0 +1,38 @@
+kind: Job
+apiVersion: batch/v1
+metadata:
+  name: git-token-duplication-job
+spec:
+  manualSelector: false
+  backoffLimit: 6
+  completions: 1
+  template:
+    spec:
+      containers:
+        - name: oc-cli
+          image: 'image-registry.openshift-image-registry.svc:5000/openshift/cli:latest'
+          command:
+            - /bin/sh
+            - '-c'
+            - 'oc login $KUBERNETES_SERVICE_HOST:$KUBERNETES_PORT_443_TCP_PORT --insecure-skip-tls-verify --token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token); export TOKEN=$(oc get secret rhdh-secrets -n developer-hub -o go-template --template="{{.data.GIT_TOKEN|base64decode}}"); oc create secret generic github-copy --from-literal=token=$TOKEN'
+          resources:
+            limits:
+              cpu: '1'
+              memory: 512Mi
+            requests:
+              cpu: '1'
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: OnFailure
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: pipeline
+      serviceAccount: pipeline
+      securityContext: {}
+      schedulerName: default-scheduler
+  suspend: false
+  parallelism: 1
+  podReplacementPolicy: TerminatingOrFailed
+  completionMode: NonIndexed
