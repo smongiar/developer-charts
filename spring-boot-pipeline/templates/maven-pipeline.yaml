@@ -109,7 +109,7 @@ spec:
       name: create-promote-pull-request
     params:
       - name: GIT_BRANCH
-        value: $(params.app-source-branch.split("/")[2]))
+        value: "$(params.app-source-branch.split('/')[2])"
     workspaces:
       - name: source
         workspace: maven-repo
@@ -123,13 +123,13 @@ spec:
       - name: REPO_FULL_NAME
         value: $(params.git-url)
       - name: HEAD
-        value: $(results.target_branch_name)
+        value: $(tasks.promote-pr.results.target_branch_name)
       - name: BASE
         value: $(params.app-source-branch)
       - name: TITLE
-        value: "[$(context.taskRun.name)] Promotion to $(results.target_branch_name)"
+        value: "[$(context.taskRun.name)] Promotion to $(tasks.promote-pr.results.target_branch_name)"
       - name: BODY
-        value: "{{ .Values.system }}-{{ .Values.component }}-service check passed for $(results.target_branch_name)"
+        value: "{{ .Values.system }}-{{ .Values.component }}-service check passed for $(tasks.promote-pr.results.target_branch_name)"
     workspaces:
       - name: source
         workspace: maven-repo
