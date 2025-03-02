@@ -50,5 +50,5 @@ spec:
             target_branch_name=production
           fi
  
-          echo -n "$target_branch_name" > $(results.target_branch_name)
+          echo -n "$target_branch_name" > $(results.target_branch_name.path)
         fi
