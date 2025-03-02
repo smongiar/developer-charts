@@ -130,9 +130,6 @@ spec:
         value: "[$(context.taskRun.name)] Promotion to $(tasks.promote-pr.results.target_branch_name)"
       - name: BODY
         value: "{{ .Values.system }}-{{ .Values.component }}-service check passed for $(tasks.promote-pr.results.target_branch_name)"
-    workspaces:
-      - name: source
-        workspace: maven-repo
 
   - name: build-container-image
     runAfter: ["package"]
