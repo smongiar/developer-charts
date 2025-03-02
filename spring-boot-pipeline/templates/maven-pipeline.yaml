@@ -109,7 +109,7 @@ spec:
       name: create-promote-pull-request
     params:
       - name: GIT_BRANCH
-        value: $(params.app-source-branch)
+        value: $(params.app-source-branch.split("/")[2]))
     workspaces:
       - name: source
         workspace: maven-repo
