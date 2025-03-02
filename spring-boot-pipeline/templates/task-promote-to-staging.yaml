@@ -11,17 +11,13 @@ metadata:
 spec:
   description: This Task can be used to update image digest in a Git repo using the kustomize
   params:
-    - name: GIT_REPOSITORY
-      type: string
-    - name: COPY_FROM_PATH
-      type: string
-    - name: COPY_TO_PATH
+    - name: GIT_BRANCH
       type: string
   workspaces:
     - description: The workspace consisting of maven project.
       name: source
   results:
-    - name: branch_name
+    - name: target_branch_name
       description: The branch name used for pull-request
   steps:
     - name: promote
@@ -47,25 +43,12 @@ spec:
           echo "Quality Gate not passed"
           exit 1
         else 
-          cd /workspace/output/$(params.GIT_REPOSITORY)
-          git checkout main
+          git checkout $(params.GIT_BRANCH)
         
-          branch_name=staging
-          export staging_exists=$(git show-ref refs/heads/staging)
-          if [ -n "$staging_exists" ]; then
-            echo "branch exists"            
-          else
-            echo "checkout to new staging branch"
-            git checkout -b staging
-            echo "push to staging branch"
-            git push origin +staging
+          target_branch_name=staging
+          if [ "$(params.GIT_BRANCH)" == "refs/heads/staging" ]; then
+            target_branch_name=production
           fi
-          echo "fulling results branch_name"
-          echo -n "$branch_name" > $(results.branch_name.path)
-        
-          git status
-          git add .
-          git commit -m "[$(context.taskRun.name)] Promotion from dev to staging (qa)"
-        
-          git push origin $branch_name
+ 
+          echo -n "$target_branch_name" > $(results.target_branch_name)
         fi

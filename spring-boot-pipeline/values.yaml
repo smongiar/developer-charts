@@ -2,6 +2,7 @@ domain: smongiar
 system: default-application
 component: default-service
 
+
 git:
   host: github.com
   branch: main
