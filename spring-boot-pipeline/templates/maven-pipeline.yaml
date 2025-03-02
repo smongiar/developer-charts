@@ -120,7 +120,7 @@ spec:
     taskRef:
       name: github-open-pr
     params:
-      - name: GIT_REPO_FULL
+      - name: REPO_FULL_NAME
         value: $(params.git-url)
       - name: HEAD
         value: $(results.target_branch_name)
