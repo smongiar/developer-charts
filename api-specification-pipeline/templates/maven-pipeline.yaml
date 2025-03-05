@@ -69,6 +69,7 @@ spec:
     - name: GOALS
       value: 
         - generate-sources
+        - "-B"
     workspaces:
       - name: source
         workspace: shared-data
