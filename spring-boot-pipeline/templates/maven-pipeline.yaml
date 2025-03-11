@@ -123,9 +123,9 @@ spec:
       - name: REPO_FULL_NAME
         value: $(params.git-url)
       - name: HEAD
-        value: $(tasks.promote-pr.results.target_branch_name)
-      - name: BASE
         value: $(params.app-source-branch)
+      - name: BASE
+        value: $(tasks.promote-pr.results.target_branch_name)
       - name: TITLE
         value: "[$(context.taskRun.name)] Promotion to $(tasks.promote-pr.results.target_branch_name)"
       - name: BODY
