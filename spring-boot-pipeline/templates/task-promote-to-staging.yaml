@@ -21,6 +21,8 @@ spec:
       description: The branch name used for pull-request
     - name: source_branch_name
       description: The resulting current branch
+    - name: repo_name
+      description: Git Repo Url starting from organization path
   steps:
     - name: promote
       image: mirror.gcr.io/alpine/git:v2.26.2
@@ -56,4 +58,8 @@ spec:
           fi
  
           echo -n "$target_branch_name" > $(results.target_branch_name.path)
+          base_git_url=$(git ls-remote --get-url origin)
+          prefix="https://github.com/"
+          echo -n "${base_git_url#"$prefix"}" > $(results.repo_name.path)
+        
         fi
