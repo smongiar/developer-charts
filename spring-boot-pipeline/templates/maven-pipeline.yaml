@@ -123,7 +123,7 @@ spec:
       - name: REPO_FULL_NAME
         value: $(params.git-url)
       - name: HEAD
-        value: $(params.app-source-branch)
+        value: $(tasks.promote-pr.results.source_branch_name)
       - name: BASE
         value: $(tasks.promote-pr.results.target_branch_name)
       - name: TITLE
