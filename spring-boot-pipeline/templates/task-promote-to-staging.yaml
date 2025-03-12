@@ -19,6 +19,8 @@ spec:
   results:
     - name: target_branch_name
       description: The branch name used for pull-request
+    - name: source_branch_name
+      description: The resulting current branch
   steps:
     - name: promote
       image: mirror.gcr.io/alpine/git:v2.26.2
