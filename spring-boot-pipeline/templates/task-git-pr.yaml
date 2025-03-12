@@ -135,8 +135,6 @@ spec:
         conn.request(
             "GET",
             branch_verify_url,
-            data_ref = {
-            },
             headers={
                 "User-Agent": "TektonCD, the peaceful cat",
                 "Authorization": authHeader,
