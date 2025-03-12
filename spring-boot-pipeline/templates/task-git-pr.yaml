@@ -109,7 +109,7 @@ spec:
         with open("/etc/github-open-pr/$(params.GITHUB_TOKEN_SECRET_KEY)", "r", encoding="utf-8") as file:
             github_token = file.read()
             
-        branch_verify_url = "$(params.API_PATH_PREFIX)/repos/branches/$(params.REPO_FULL_NAME)"
+        branch_verify_url = "$(params.API_PATH_PREFIX)/repos/branches/$(params.BASE)"
         branch_creation_url = "$(params.API_PATH_PREFIX)/repos/$(params.REPO_FULL_NAME)/git/refs" 
         open_pr_url = "$(params.API_PATH_PREFIX)/repos/$(params.REPO_FULL_NAME)/pulls"
         
@@ -142,10 +142,10 @@ spec:
                 "Content-Type": "application/vnd.github.v3+json",
             })
         resp = conn.getresponse()
-        print(resp)
-        body = json.loads(resp.read().decode())
-        commit = body["commit"]
-        sha = commit["sha"]
+        resp_json = json.loads(resp.read().decode())
+        print(resp_json)
+        commit = resp_json['commit']
+        sha = commit['sha']
         
         # If not exists create branch
         if not str(resp.status).startswith("2"): 
@@ -166,7 +166,8 @@ spec:
                   "Content-Type": "application/vnd.github.v3+json",
               })
             resp = conn.getresponse()
-            print(resp)
+            resp_json = json.loads(resp.read().decode())
+            print(resp_json)
             
         # Open pull-request
         conn.request(
