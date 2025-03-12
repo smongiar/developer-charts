@@ -43,11 +43,13 @@ spec:
           echo "Quality Gate not passed"
           exit 1
         else 
-          current_branch=$(echo $IN | awk -F/ '{print $NF}')
+          current_branch=$(echo $(params.GIT_BRANCH) | awk -F/ '{print $NF}')
           git checkout $current_branch
+          echo -n "$current_branch" > $(results.source_branch_name.path)
         
-          target_branch_name=staging
-          if [ "$(params.GIT_BRANCH)" == "refs/heads/staging" ]; then
+          if [ "$current_branch" == "main" ]; then
+            target_branch_name=staging
+          elif [  "$current_branch" == "staging" ]; then
             target_branch_name=production
           fi
  
