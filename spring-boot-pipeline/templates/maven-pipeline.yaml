@@ -121,9 +121,9 @@ spec:
       name: github-open-pr
     params:
       - name: REPO_FULL_NAME
-        value: $(params.git-url)
+        value: $(tasks.promote-pr.results.repo_name)
       - name: HEAD
-        value: $(params.app-source-branch)
+        value: $(tasks.promote-pr.results.source_branch_name)
       - name: BASE
         value: $(tasks.promote-pr.results.target_branch_name)
       - name: TITLE
