@@ -135,8 +135,6 @@ spec:
         conn.request(
             "GET",
             branch_verify_url,
-            data_ref = {
-            },
             headers={
                 "User-Agent": "TektonCD, the peaceful cat",
                 "Authorization": authHeader,
@@ -144,10 +142,10 @@ spec:
                 "Content-Type": "application/vnd.github.v3+json",
             })
         resp = conn.getresponse()
-        print(resp)
-        body = json.loads(resp.read().decode())
-        commit = body["commit"]
-        sha = commit["sha"]
+        resp_json = json.loads(resp.read().decode())
+        print(resp_json)
+        commit = resp_json['commit']
+        sha = commit['sha']
         
         # If not exists create branch
         if not str(resp.status).startswith("2"): 
@@ -168,7 +166,8 @@ spec:
                   "Content-Type": "application/vnd.github.v3+json",
               })
             resp = conn.getresponse()
-            print(resp)
+            resp_json = json.loads(resp.read().decode())
+            print(resp_json)
             
         # Open pull-request
         conn.request(
