@@ -59,7 +59,7 @@ spec:
  
           echo -n "$target_branch_name" > $(results.target_branch_name.path)
           base_git_url=$(git ls-remote --get-url origin)
-          prefix="git@github.com:"
+          prefix="https://github.com/"
           echo -n "${base_git_url#"$prefix"}" > $(results.repo_name.path)
         
         fi
