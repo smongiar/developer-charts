@@ -181,6 +181,7 @@ spec:
             print(resp_json)
         
         # Tracking branch promotion
+        
         with open("copy.txt", "w") as file:
           file.write("Open a PR from $(params.BASE) to $(params.HEAD)")
             
