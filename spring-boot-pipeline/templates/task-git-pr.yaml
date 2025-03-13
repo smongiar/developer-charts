@@ -157,7 +157,7 @@ spec:
         
         # If not exists create branch
         data = {
-                "ref": "refs/head/$(params.BASE)",
+                "ref": "refs/heads/$(params.BASE)",
                 "sha": f"{sha}" 
         }
         print("Sending this data to ref API: ")
@@ -179,6 +179,10 @@ spec:
         resp = conn.getresponse()
         resp_json = json.loads(resp.read().decode())
         print(resp_json)
+        
+                # Tracking branch promotion
+        with open("copy.txt", "w") as file:
+          file.write("Open a PR from $(params.BASE) to $(params.HEAD)")
             
         # Open pull-request
         data = {
