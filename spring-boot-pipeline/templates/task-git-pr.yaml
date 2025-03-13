@@ -157,7 +157,7 @@ spec:
         
         # If not exists create branch
         data = {
-                "ref": "refs/head/$(params.BASE)",
+                "ref": "refs/heads/$(params.BASE)",
                 "sha": f"{sha}" 
         }
         print("Sending this data to ref API: ")
