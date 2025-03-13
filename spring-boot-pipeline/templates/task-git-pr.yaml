@@ -109,8 +109,8 @@ spec:
         with open("/etc/github-open-pr/$(params.GITHUB_TOKEN_SECRET_KEY)", "r", encoding="utf-8") as file:
             github_token = file.read()
         
-        branch_head_url = "$(params.API_PATH_PREFIX)/repos/branches/$(params.HEAD)"    
-        branch_verify_url = "$(params.API_PATH_PREFIX)/repos/branches/$(params.BASE)"
+        branch_head_url = "$(params.API_PATH_PREFIX)/repos/$(params.REPO_FULL_NAME)/branches/$(params.HEAD)"    
+        branch_verify_url = "$(params.API_PATH_PREFIX)/repos/$(params.REPO_FULL_NAME)/branches/$(params.BASE)"
         branch_creation_url = "$(params.API_PATH_PREFIX)/repos/$(params.REPO_FULL_NAME)/git/refs" 
         open_pr_url = "$(params.API_PATH_PREFIX)/repos/$(params.REPO_FULL_NAME)/pulls"
         
@@ -149,7 +149,7 @@ spec:
         sha = commit['sha']
         
         # Check if branch exists
-         conn.request(
+        conn.request(
             "GET",
             branch_verify_url,
             headers={
