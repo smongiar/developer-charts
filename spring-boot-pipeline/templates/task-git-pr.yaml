@@ -132,7 +132,7 @@ spec:
             headers={
                 "User-Agent": "TektonCD, the peaceful cat",
                 "Authorization": authHeader,
-                "Accept": "application/vnd.github.v3+json ",
+                "Accept": "application/vnd.github.v3+json",
                 "Content-Type": "application/vnd.github.v3+json",
             })
         resp = conn.getresponse()
@@ -148,7 +148,7 @@ spec:
             headers={
                 "User-Agent": "TektonCD, the peaceful cat",
                 "Authorization": authHeader,
-                "Accept": "application/vnd.github.v3+json ",
+                "Accept": "application/vnd.github.v3+json",
                 "Content-Type": "application/vnd.github.v3+json",
             })
         resp = conn.getresponse()
@@ -168,7 +168,7 @@ spec:
               headers={
                   "User-Agent": "TektonCD, the peaceful cat",
                   "Authorization": authHeader,
-                  "Accept": "application/vnd.github.v3+json ",
+                  "Accept": "application/vnd.github.v3+json",
                   "Content-Type": "application/vnd.github.v3+json",
               })
             
@@ -188,7 +188,7 @@ spec:
             headers={
                 "User-Agent": "TektonCD, the peaceful cat",
                 "Authorization": authHeader,
-                "Accept": "application/vnd.github.v3+json ",
+                "Accept": "application/vnd.github.v3+json",
                 "Content-Type": "application/vnd.github.v3+json",
             })
         resp = conn.getresponse()
