@@ -171,9 +171,6 @@ spec:
                   "Accept": "application/vnd.github.v3+json ",
                   "Content-Type": "application/vnd.github.v3+json",
               })
-            resp = conn.getresponse()
-            resp_json = json.loads(resp.read().decode())
-            print(resp_json)
             
         # Open pull-request
         data = {
