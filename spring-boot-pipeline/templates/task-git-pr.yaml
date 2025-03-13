@@ -132,7 +132,7 @@ spec:
             headers={
                 "User-Agent": "TektonCD, the peaceful cat",
                 "Authorization": authHeader,
-                "Accept": "application/vnd.github.v3+json ",
+                "Accept": "application/vnd.github.v3+json",
                 "Content-Type": "application/vnd.github.v3+json",
             })
         resp = conn.getresponse()
@@ -148,19 +148,24 @@ spec:
             headers={
                 "User-Agent": "TektonCD, the peaceful cat",
                 "Authorization": authHeader,
-                "Accept": "application/vnd.github.v3+json ",
+                "Accept": "application/vnd.github.v3+json",
                 "Content-Type": "application/vnd.github.v3+json",
             })
         resp = conn.getresponse()
+        resp_json = json.loads(resp.read().decode())
+        print(resp_json)
         
         # If not exists create branch
+        data = {
+                "ref": "refs/head/$(params.BASE)",
+                "sha": "{sha}" 
+        }
+        print("Sending this data to ref API: ")
+        print(data)
         if not str(resp.status).startswith("2"): 
             print(f"Branch $(params.BASE) doesn't exist. Status: {resp.status} ")
             print(f"Creating $(params.BASE) ref")
-            data = {
-                "ref": "refs/head/$(params.BASE)",
-                "sha": "{sha}" 
-             },
+            body=json.dumps(data),
             conn.request(
               "POST",
               branch_creation_url,
@@ -168,9 +173,12 @@ spec:
               headers={
                   "User-Agent": "TektonCD, the peaceful cat",
                   "Authorization": authHeader,
-                  "Accept": "application/vnd.github.v3+json ",
+                  "Accept": "application/vnd.github.v3+json",
                   "Content-Type": "application/vnd.github.v3+json",
               })
+        resp = conn.getresponse()
+        resp_json = json.loads(resp.read().decode())
+        print(resp_json)
             
         # Open pull-request
         data = {
@@ -188,7 +196,7 @@ spec:
             headers={
                 "User-Agent": "TektonCD, the peaceful cat",
                 "Authorization": authHeader,
-                "Accept": "application/vnd.github.v3+json ",
+                "Accept": "application/vnd.github.v3+json",
                 "Content-Type": "application/vnd.github.v3+json",
             })
         resp = conn.getresponse()
