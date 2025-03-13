@@ -176,9 +176,13 @@ spec:
                   "Accept": "application/vnd.github.v3+json",
                   "Content-Type": "application/vnd.github.v3+json",
               })
-        resp = conn.getresponse()
-        resp_json = json.loads(resp.read().decode())
-        print(resp_json)
+            resp = conn.getresponse()
+            resp_json = json.loads(resp.read().decode())
+            print(resp_json)
+        
+        # Tracking branch promotion
+        with open("copy.txt", "w") as file:
+          file.write("Open a PR from $(params.BASE) to $(params.HEAD)")
             
         # Open pull-request
         data = {
