@@ -149,7 +149,7 @@ spec:
         sha = commit['sha']
         
         # Check if branch exists
-         conn.request(
+        conn.request(
             "GET",
             branch_verify_url,
             headers={
