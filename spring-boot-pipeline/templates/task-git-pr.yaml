@@ -109,19 +109,12 @@ spec:
         with open("/etc/github-open-pr/$(params.GITHUB_TOKEN_SECRET_KEY)", "r", encoding="utf-8") as file:
             github_token = file.read()
         
-        branch_head_url = "$(params.API_PATH_PREFIX)/repos/branches/$(params.HEAD)"    
-        branch_verify_url = "$(params.API_PATH_PREFIX)/repos/branches/$(params.BASE)"
+        branch_head_url = "$(params.API_PATH_PREFIX)/repos/$(params.REPO_FULL_NAME)/branches/$(params.HEAD)"    
+        branch_verify_url = "$(params.API_PATH_PREFIX)/repos/$(params.REPO_FULL_NAME)/branches/$(params.BASE)"
         branch_creation_url = "$(params.API_PATH_PREFIX)/repos/$(params.REPO_FULL_NAME)/git/refs" 
         open_pr_url = "$(params.API_PATH_PREFIX)/repos/$(params.REPO_FULL_NAME)/pulls"
         
-        data = {
-            "head": "$(params.HEAD)",
-            "base": "$(params.BASE)",
-            "title": "$(params.TITLE)",
-            "body": """$(params.BODY)"""
-        }
-        print("Sending this data to GitHub: ")
-        print(data)
+        
 
         authHeader = f"$(params.AUTH_TYPE) {github_token}"
 
@@ -164,14 +157,14 @@ spec:
         if not str(resp.status).startswith("2"): 
             print(f"Branch $(params.BASE) doesn't exist. Status: {resp.status} ")
             print(f"Creating $(params.BASE) ref")
-        
+            data = {
+                "ref": "refs/head/$(params.BASE)",
+                "sha": "{sha}" 
+             },
             conn.request(
               "POST",
               branch_creation_url,
-              data_ref={
-                "ref": "$(params.BASE)",
-                "sha": "{sha}" 
-              },
+              body=json.dumps(data),
               headers={
                   "User-Agent": "TektonCD, the peaceful cat",
                   "Authorization": authHeader,
@@ -183,6 +176,14 @@ spec:
             print(resp_json)
             
         # Open pull-request
+        data = {
+            "head": "$(params.HEAD)",
+            "base": "$(params.BASE)",
+            "title": "$(params.TITLE)",
+            "body": """$(params.BODY)"""
+        }
+        print("Sending this data to GitHub: ")
+        print(data)
         conn.request(
             "POST",
             open_pr_url,
