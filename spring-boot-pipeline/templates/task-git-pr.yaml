@@ -168,7 +168,7 @@ spec:
             conn.request(
               "POST",
               branch_creation_url,
-              data_ref={
+              data={
                 "ref": "$(params.BASE)",
                 "sha": "{sha}" 
               },
