@@ -13,6 +13,8 @@ spec:
   params:
     - name: GIT_BRANCH
       type: string
+    - name: OWNER
+      type: string
   workspaces:
     - description: The workspace consisting of maven project.
       name: source
@@ -65,12 +67,12 @@ spec:
             target_branch_name=production
           fi
           
-          git config --global user.name "smongiar"
-          git config --global user.email "smongiar@redhat.com"
-          token=$(cat /etc/github-open-pr/token)
+          git config --global user.name "$(params.OWNER)"
+          git config --global user.email "$(params.OWNER)@redhat.com"
+          export TOKEN=$(cat /etc/github-open-pr/token)
           git add sonar-result.txt
           git commit -m "promote to $target_branch_name test"
-          git -c credential.helper= -c credential.helper='!f() { echo username=smongiar; echo "password=$token"; };f' push origin main
+          git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$TOKEN"; };f' push origin $current_branch
         
           echo -n "$target_branch_name" > $(results.target_branch_name.path)
           base_git_url=$(git ls-remote --get-url origin)
