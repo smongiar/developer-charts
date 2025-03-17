@@ -56,7 +56,13 @@ spec:
           elif [  "$current_branch" == "staging" ]; then
             target_branch_name=production
           fi
- 
+          
+          git checkout -b $target_branch_name
+          git config --global user.name "smongiar"
+          git config --global user.email "smongiar@redhat.com"
+          git add sonar-result.txt
+          git commit -m "promote to $target_branch_name test"
+        
           echo -n "$target_branch_name" > $(results.target_branch_name.path)
           base_git_url=$(git ls-remote --get-url origin)
           prefix="https://github.com/"
