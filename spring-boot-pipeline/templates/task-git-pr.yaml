@@ -142,6 +142,7 @@ spec:
         sha = commit['sha']
         
         # Check if branch exists
+        print(f"Check if $(params.BASE) exists")
         conn.request(
             "GET",
             branch_verify_url,
@@ -155,7 +156,7 @@ spec:
         resp_json = json.loads(resp.read().decode())
         print(resp_json)
         
-        # If not exists create branch
+        # If not exists, create branch
         data = {
                 "ref": "refs/heads/$(params.BASE)",
                 "sha": f"{sha}" 
