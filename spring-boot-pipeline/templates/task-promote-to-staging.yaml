@@ -26,7 +26,7 @@ spec:
   volumes:
     - name: githubtoken
       secret:
-        secretName: $(params.GITHUB_TOKEN_SECRET_NAME)
+        secretName: github
   steps:
     - name: promote
       image: mirror.gcr.io/alpine/git:v2.26.2
