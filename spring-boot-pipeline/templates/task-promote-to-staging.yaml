@@ -23,9 +23,17 @@ spec:
       description: The resulting current branch
     - name: repo_name
       description: Git Repo Url starting from organization path
+  volumes:
+    - name: githubtoken
+      secret:
+        secretName: github
   steps:
     - name: promote
       image: mirror.gcr.io/alpine/git:v2.26.2
+      volumeMounts:
+        - name: githubtoken
+          readOnly: true
+          mountPath: /etc/github-open-pr
       workingDir: $(workspaces.source.path)
       script: |
         set -x
@@ -57,11 +65,12 @@ spec:
             target_branch_name=production
           fi
           
-          git checkout -b $target_branch_name
           git config --global user.name "smongiar"
           git config --global user.email "smongiar@redhat.com"
+          token=$(cat /etc/github-open-pr/token)
           git add sonar-result.txt
           git commit -m "promote to $target_branch_name test"
+          git -c credential.helper= -c credential.helper='!f() { echo username=smongiar; echo "password=$token"; };f' push origin main
         
           echo -n "$target_branch_name" > $(results.target_branch_name.path)
           base_git_url=$(git ls-remote --get-url origin)
