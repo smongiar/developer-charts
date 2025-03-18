@@ -80,8 +80,11 @@ spec:
           git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$TOKEN"; };f' push origin $target_branch_name
           
           git checkout main
+          date > timestamp.txt
           git add sonar-result.txt
+          git add timestamp.txt
           git commit -m "promote to $target_branch_name test"
+          git push origin main
           
           echo -n "$target_branch_name" > $(results.target_branch_name.path)
           base_git_url=$(git ls-remote --get-url origin)
