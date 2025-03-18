@@ -82,7 +82,7 @@ spec:
             git checkout $target_branch_name
           fi
           git add sonar-result.txt
-          git commit -m "mark branch for promotion to $target_branch_name"
+          git commit -m "mark branch for promotion to $target_branch_name" || true
           git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin $target_branch_name 
           
           # back to the current branch
@@ -91,7 +91,7 @@ spec:
           date > timestamp.txt
           git add timestamp.txt
           
-          git commit --amend -m "mark branch for promotion to $target_branch_name test"
+          git commit --amend -m "mark branch for promotion to $target_branch_name"
           git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin $current_branch
           
           echo -n "$target_branch_name" > $(results.target_branch_name.path)
