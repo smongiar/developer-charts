@@ -89,8 +89,9 @@ spec:
             git checkout $target_branch_name
           fi
           git add sonar-result.txt
-          git branch --set-upstream-to origin/$target_branch_name $target_branch_name
+          #git branch --set-upstream-to origin/$target_branch_name $target_branch_name
           git commit -m "mark branch for promotion to $target_branch_name" || true
+          git pull origin staging
           git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin $target_branch_name 
           
           # back to the current branch
