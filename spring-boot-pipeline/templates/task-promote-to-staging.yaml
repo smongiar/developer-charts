@@ -81,7 +81,7 @@ spec:
           else
             git checkout $target_branch_name
           fi
-          git push origin $target_branch_name
+          git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin $target_branch_name 
           
           # back to the current branch
           git checkout $current_branch
@@ -90,7 +90,7 @@ spec:
           git add timestamp.txt
           
           git commit --amend -m "mark branch for promotion to $target_branch_name test"
-          git push origin $current_branch
+          git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin $current_branch
           
           echo -n "$target_branch_name" > $(results.target_branch_name.path)
           base_git_url=$(git ls-remote --get-url origin)
