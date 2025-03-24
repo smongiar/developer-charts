@@ -120,7 +120,7 @@ spec:
     - name: GOALS
       value: 
         - compile
-        - '-B'
+        - -B
     workspaces:
     - name: source
       workspace: maven-repo
@@ -138,7 +138,7 @@ spec:
       value: 
         - package
         - -DskipTests
-        - '-B'
+        - -B
         {{- if eq .Values.deployment "legacy-jar" }}
         - -Dquarkus.package.jar.type=legacy-jar
         {{ end }}

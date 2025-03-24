@@ -2,19 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.component }}-api-shared-data
-spec:
-  resources:
-    requests:
-      storage: 1Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: {{ .Values.component }}-api-maven-settings
+  name: {{ .Values.component }}-api-workspace
 spec:
   resources:
     requests:

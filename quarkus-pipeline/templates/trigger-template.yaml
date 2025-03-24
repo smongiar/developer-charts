@@ -38,19 +38,9 @@ spec:
           name: {{ .Values.component }}-service
         workspaces:
           - name: maven-repo
-            volumeClaimTemplate:
-              spec:
-                accessModes:
-                  - ReadWriteOnce
-                resources:
-                  requests:
-                    storage: 1Gi
+            persistentVolumeClaim:
+              claimName: {{ .Values.component }}-workspace
           - name: maven-settings
-            volumeClaimTemplate:
-              spec:
-                accessModes:
-                  - ReadWriteOnce
-                resources:
-                  requests:
-                    storage: 1Gi
+            configMap:
+              name: {{ .Values.component }}-maven-settings
 

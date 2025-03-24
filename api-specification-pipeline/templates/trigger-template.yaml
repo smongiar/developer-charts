@@ -44,19 +44,9 @@ spec:
         serviceAccountName: pipeline
         workspaces:
           - name: shared-data
-            volumeClaimTemplate:
-              spec:
-                accessModes:
-                  - ReadWriteOnce
-                resources:
-                  requests:
-                    storage: 1Gi
+            persistentVolumeClaim:
+              claimName: {{ .Values.component }}-api-workspace
           - name: maven-settings
-            volumeClaimTemplate:
-              spec:
-                accessModes:
-                  - ReadWriteOnce
-                resources:
-                  requests:
-                    storage: 1Gi
+            configMap:
+              name: {{ .Values.component }}-api-maven-settings
 
