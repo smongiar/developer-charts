@@ -6,8 +6,8 @@ metadata:
     system: {{ .Values.system }}
 spec:
   workspaces:
-  - name: maven-repo
-  - name: maven-settings
+    - name: maven-repo
+    - name: maven-settings
 
   params:
     - default: https://github.com/{{ .Values.domain }}/{{ .Values.system }}-{{ .Values.component }}-service
@@ -36,116 +36,125 @@ spec:
       description: "release version"
 
   tasks:
-  - name: clone
-    taskRef:
-      name: git-clone
-      kind: ClusterTask
-    params:
-      - name: url
-        value: $(params.git-url)
-      - name: revision
-        value: $(params.git-revision)
-    workspaces:
-    - name: output
-      workspace: maven-repo
+    - name: clone
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      params:
+        - name: url
+          value: $(params.git-url)
+        - name: revision
+          value: $(params.git-revision)
+      workspaces:
+        - name: output
+          workspace: maven-repo
 
-  - name: build
-    taskRef:
-      name: maven
-      kind: ClusterTask
-    runAfter: ["clone"]
-    params:
-    - name: GOALS
-      value: 
-        - compile
-        - '-B'
-    workspaces:
-    - name: source
-      workspace: maven-repo
-    - name: maven-settings
-      workspace: maven-settings
+    - name: build
+      taskRef:
+        name: maven
+        kind: ClusterTask
+      runAfter: ["clone"]
+      params:
+        - name: GOALS
+          value:
+            - compile
+            - '-B'
+      workspaces:
+        - name: source
+          workspace: maven-repo
+        - name: maven-settings
+          workspace: maven-settings
 
-  - name: code-analysis
-    taskRef:
-      name: maven
-      kind: ClusterTask
-    runAfter:
-      - build-app
-    workspaces:
-      - name: source
-        workspace: maven-repo
-      - name: maven-settings
-        workspace: maven-settings
-    params:
-      - name: GOALS
-        value:
-          - install
-          - sonar:sonar
-          - -f
-          - {{ .Values.component }}
-          - -Dsonar.host.url=http://sonar-sonarqube:9000
-          - -Dsonar.userHome=/tmp/sonar
-          - -DskipTests=true
-
-  - name: promote-staging-pr
-    when:
-        - input: "$(params.app-source-branch)"
-          operator: in
-          values: [ "refs/heads/main" ]
-    runAfter:
-      - code-analysis
-    taskRef:
-      name: create-promote-pull-request
-    params:
-      - name: GIT_REPOSITORY
-        value: $(params.git-url)
-      - name: COPY_FROM_PATH
-        value: "environments/dev"
-      - name: COPY_TO_PATH
-        value: "environments/sta"
-    workspaces:
-      - name: maven-repo
-        workspace: maven-repo
-
-  - name: package
-    taskRef:
-      name: maven
-      kind: ClusterTask
-    runAfter: ["build"]
-    params:
-    - name: GOALS
-      value: 
+    - name: code-analysis
+      taskRef:
+        name: maven
+        kind: ClusterTask
+      runAfter:
         - package
-        - -DskipTests
-        - '-B'
-    workspaces:
-    - name: source
-      workspace: maven-repo
-    - name: maven-settings
-      workspace: maven-settings
+      workspaces:
+        - name: source
+          workspace: maven-repo
+        - name: maven-settings
+          workspace: maven-settings
+      params:
+        - name: GOALS
+          value:
+            - install
+            - sonar:sonar
+            - -Dsonar.host.url=http://sonarqube-sonarqube.sonarqube.svc.cluster.local:9000
+            - -Dsonar.userHome=/tmp/sonar
+            - -DskipTests=true
 
-  - name: build-container-image
-    runAfter: ["package"]
-    taskRef:
-      name: buildah
-      kind: ClusterTask
-    workspaces:
-    - name: source
-      workspace: maven-repo
-    params:
-    - name: IMAGE
-      value: $(params.image):$(params.version)
-    - name: DOCKERFILE
-      value: $(params.dockerfilePath)
+    - name: package
+      taskRef:
+        name: maven
+        kind: ClusterTask
+      runAfter: ["build"]
+      params:
+        - name: GOALS
+          value:
+            - package
+            - -DskipTests
+            - '-B'
+      workspaces:
+        - name: source
+          workspace: maven-repo
+        - name: maven-settings
+          workspace: maven-settings
 
-  - name: deploy-to-dev
-    runAfter: 
-      - build-container-image 
-    taskRef:
-      name: openshift-client
-      kind: ClusterTask
-    params:
-    - name: SCRIPT
-      value: oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-dev
+    - name: promote-pr
+      runAfter:
+        - code-analysis
+      taskRef:
+        name: create-promote-pull-request
+      params:
+        - name: GIT_BRANCH
+          value: $(params.app-source-branch)
+        - name: OWNER
+          value: {{ .Values.system }}
+      workspaces:
+        - name: source
+          workspace: maven-repo
+
+    - name: open-git-pull-request
+      runAfter:
+        - promote-pr
+      taskRef:
+        name: github-open-pr
+      params:
+        - name: REPO_FULL_NAME
+          value: $(tasks.promote-pr.results.repo_name)
+        - name: HEAD
+          value: $(tasks.promote-pr.results.source_branch_name)
+        - name: BASE
+          value: $(tasks.promote-pr.results.target_branch_name)
+        - name: TITLE
+          value: "[$(context.taskRun.name)] Promotion to $(tasks.promote-pr.results.target_branch_name)"
+        - name: BODY
+          value: "{{ .Values.system }}-{{ .Values.component }}-service check passed for $(tasks.promote-pr.results.target_branch_name)"
+
+    - name: build-container-image
+      runAfter: ["package"]
+      taskRef:
+        name: buildah
+        kind: ClusterTask
+      workspaces:
+        - name: source
+          workspace: maven-repo
+      params:
+        - name: IMAGE
+          value: $(params.image):$(params.version)
+        - name: DOCKERFILE
+          value: $(params.dockerfilePath)
+
+    - name: deploy-to-dev
+      runAfter:
+        - build-container-image
+      taskRef:
+        name: openshift-client
+        kind: ClusterTask
+      params:
+        - name: SCRIPT
+          value: oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-dev
 
 
