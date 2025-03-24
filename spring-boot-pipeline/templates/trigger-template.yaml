@@ -36,13 +36,6 @@ spec:
             value: $(tt.params.version)
         pipelineRef:
           name: {{ .Values.component }}-service
-        serviceAccountName: pipeline
-        taskRunSpecs:
-          - pipelineTaskName: clone
-            taskPodTemplate:
-              securityContext:
-                runAsNonRoot: false
-                runAsUser: 0
         workspaces:
           - name: maven-repo
             volumeClaimTemplate:
