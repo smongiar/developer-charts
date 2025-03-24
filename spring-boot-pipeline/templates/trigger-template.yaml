@@ -43,6 +43,9 @@ spec:
               securityContext:
                 runAsNonRoot: false
                 runAsUser: 0
+              env:
+                - name: "WORKSPACE_OUTPUT_PATH"
+                  value: "/home/output"
         workspaces:
           - name: maven-repo
             volumeClaimTemplate:

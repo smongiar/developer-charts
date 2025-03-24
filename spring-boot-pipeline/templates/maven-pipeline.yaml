@@ -40,10 +40,6 @@ spec:
     taskRef:
       name: git-clone
       kind: ClusterTask
-    podTemplate:
-      env:
-        - name: "WORKSPACE_OUTPUT_PATH"
-          value: "/home/output"
     params:
       - name: url
         value: $(params.git-url)
