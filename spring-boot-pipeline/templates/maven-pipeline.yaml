@@ -153,6 +153,11 @@ spec:
     taskRef:
       name: openshift-client
       kind: ClusterTask
+    when:
+      - input: $(params.git-revision)
+        operator: in
+        values:
+          - '"main"'
     params:
     - name: SCRIPT
       value: oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-dev
