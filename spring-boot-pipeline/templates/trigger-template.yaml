@@ -37,15 +37,6 @@ spec:
         pipelineRef:
           name: {{ .Values.component }}-service
         serviceAccountName: pipeline
-        taskRunSpecs:
-          - pipelineTaskName: clone
-            taskPodTemplate:
-              securityContext:
-                runAsNonRoot: false
-                runAsUser: 0
-              env:
-                - name: "WORKSPACE_OUTPUT_PATH"
-                  value: "/home/output"
         workspaces:
           - name: maven-repo
             volumeClaimTemplate:
