@@ -36,7 +36,6 @@ spec:
             value: $(tt.params.version)
         pipelineRef:
           name: {{ .Values.component }}-service
-        serviceAccountName: pipeline
         workspaces:
           - name: maven-repo
             volumeClaimTemplate:
