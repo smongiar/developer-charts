@@ -45,6 +45,8 @@ spec:
         value: $(params.git-url)
       - name: revision
         value: $(params.git-revision)
+      - name: subdirectory
+        value: "app"
     workspaces:
     - name: output
       workspace: maven-repo
