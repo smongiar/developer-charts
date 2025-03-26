@@ -152,6 +152,8 @@ spec:
     params:
     - name: IMAGE
       value: $(params.image):$(params.version)
+    - name: CONTEXT
+      value: "app"
     - name: DOCKERFILE
       value: $(params.dockerfilePath)
 
