@@ -39,13 +39,9 @@ spec:
       workingDir: $(workspaces.source.path)
       script: |
         set -x
-        rm -rf pull-request-workdir
-        export sonarlink=$(awk 'match($0,/ceTaskUrl=[\s\S]*.+/){print substr($0,RSTART+10,RLENGTH-10)}' target/sonar/report-task.txt)
-        wget $sonarlink
-        mv task* sonar-result.txt
-        export result=$(awk 'match($0,/"status":"[A-Z]+/){print substr($0,RSTART+10,RLENGTH-10)}' sonar-result.txt)
+        export result="IN PROGRESS"
         
-        while [ "$result" == "IN_PROGRESS" ]; do
+        while [ "$result" != "IN_PROGRESS" ]; do
           sleep 60
           export sonarlink=$(awk 'match($0,/ceTaskUrl=[\s\S]*.+/){print substr($0,RSTART+10,RLENGTH-10)}' target/sonar/report-task.txt)
           wget $sonarlink
