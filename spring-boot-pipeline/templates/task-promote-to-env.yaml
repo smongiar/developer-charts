@@ -11,35 +11,103 @@ metadata:
 spec:
   description: This Task can be used to update image digest in a Git repo using the kustomize
   params:
-    - name: GIT_REPOSITORY
+    - name: GIT_BRANCH
       type: string
-    - name: COPY_FROM
-      type: string
-    - name: COPY_TO
+    - name: OWNER
       type: string
   workspaces:
     - description: The workspace consisting of maven project.
-      name: workspace
+      name: source
   results:
-    - name: branch_name
+    - name: target_branch_name
       description: The branch name used for pull-request
+    - name: source_branch_name
+      description: The resulting current branch
+    - name: repo_name
+      description: Git Repo Url starting from organization path
+  volumes:
+    - name: githubtoken
+      secret:
+        secretName: github
   steps:
     - name: promote
-      image: docker.io/alpine/git:v2.26.2
-      workingDir: $(workspaces.workspace.path)
+      image: mirror.gcr.io/alpine/git:v2.26.2
+      volumeMounts:
+        - name: githubtoken
+          readOnly: true
+          mountPath: /etc/github-open-pr
+      workingDir: $(workspaces.source.path)
       script: |
         set -x
         rm -rf pull-request-workdir
-        git clone $(params.GIT_REPOSITORY) pull-request-workdir
-        cd pull-request-workdir
+        export sonarlink=$(awk 'match($0,/ceTaskUrl=[\s\S]*.+/){print substr($0,RSTART+10,RLENGTH-10)}' target/sonar/report-task.txt)
+        wget $sonarlink
+        mv task* sonar-result.txt
+        export result=$(awk 'match($0,/"status":"[A-Z]+/){print substr($0,RSTART+10,RLENGTH-10)}' sonar-result.txt)
+        
+        while [ "$result" == "IN_PROGRESS" ]; do
+          sleep 60
+          export sonarlink=$(awk 'match($0,/ceTaskUrl=[\s\S]*.+/){print substr($0,RSTART+10,RLENGTH-10)}' target/sonar/report-task.txt)
+          wget $sonarlink
+          mv task* sonar-result.txt
+          export result=$(awk 'match($0,/"status":"[A-Z]+/){print substr($0,RSTART+10,RLENGTH-10)}' sonar-result.txt)
+        done
+        
+        if [ "$result" != "SUCCESS" ]; then
+          echo "Quality Gate not passed"
+          exit 1
+        else 
+          current_branch=$(echo $(params.GIT_BRANCH) | awk -F/ '{print $NF}')
+          git checkout $current_branch
+          echo -n "$current_branch" > $(results.source_branch_name.path)
+        
+          export GITHUB_TOKEN=$(cat /etc/github-open-pr/token)
+          export GITHUB_ACTOR=$(params.OWNER)
+        
+          git config --global user.name "$(params.OWNER)"
+          git config --global user.email "$(params.OWNER)@redhat.com"
+        
+          if [ "$current_branch" == "main" ]; then
+            git add sonar-result.txt
+            target_branch_name=staging
+          elif [  "$current_branch" == "staging" ]; then
+            target_branch_name=production
+          fi
+          git commit -m "mark branch for promotion to $target_branch_name"
+          if [ $? -eq 0 ]; then
+            echo "commit already present"
+          else
+            echo "let amend previous commit"
+            git commit --amend -m "mark branch for promotion to $target_branch_name"
+            git push origin main
+          fi
+        
+          existed_in_local=$(git branch --list $target_branch_name)
+          if [[ -z ${existed_in_local} ]]; then
+            git checkout -b $target_branch_name
+          else
+            git checkout $target_branch_name
+          fi
+          git pull origin staging || true
+          git add sonar-result.txt
+          #git branch --set-upstream-to origin/$target_branch_name $target_branch_name
+          git commit -m "mark branch for promotion to $target_branch_name" || true
+        
+          git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin $target_branch_name 
+        
+          # back to the current branch
+          git checkout $current_branch
+        
+          date > timestamp.txt
+          git add timestamp.txt
+        
+          git commit --amend -m "mark branch for promotion to $target_branch_name"
+          git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin $current_branch
+        
+          echo -n "$target_branch_name" > $(results.target_branch_name.path)
+          base_git_url=$(git ls-remote --get-url origin)
+          prefix="https://github.com/"
+          echo -n "${base_git_url#"$prefix"}" > $(results.repo_name.path)
+        
+        fi
 
-        branch_name=promoting-$(context.taskRun.name)-to-$(params.COPY_TO)-$(context.taskRun.uid)
-        git checkout -b $branch_name
-        echo -n "$branch_name" > $(results.branch_name.path)
-
-        git status
-        git add $(params.COPY_TO_PATH)
-        git commit -m "[$(context.taskRun.name)] Promotion from $(params.COPY_FROM_PATH) to $(params.COPY_TO_PATH)"
-
-        git remote add auth-origin $(echo $(params.GIT_REPOSITORY))
-        git push -u auth-origin HEAD

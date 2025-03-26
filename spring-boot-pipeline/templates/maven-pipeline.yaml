@@ -110,6 +110,8 @@ spec:
     params:
       - name: GIT_BRANCH
         value: $(params.app-source-branch)
+      - name: OWNER
+        value: {{ .Values.system }}
     workspaces:
       - name: source
         workspace: maven-repo
@@ -151,6 +153,11 @@ spec:
     taskRef:
       name: openshift-client
       kind: ClusterTask
+    when:
+      - input: $(params.git-revision)
+        operator: in
+        values:
+          - '"main"'
     params:
     - name: SCRIPT
       value: oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-dev
