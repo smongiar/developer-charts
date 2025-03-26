@@ -57,10 +57,12 @@ spec:
       kind: ClusterTask
     runAfter: ["clone"]
     params:
-    - name: GOALS
-      value: 
-        - compile
-        - '-B'
+      - name: CONTEXT_DIR
+        value: "app"
+      - name: GOALS
+        value:
+          - compile
+          - '-B'
     workspaces:
     - name: source
       workspace: maven-repo
@@ -79,6 +81,8 @@ spec:
       - name: maven-settings
         workspace: maven-settings
     params:
+      - name: CONTEXT_DIR
+        value: "app"
       - name: GOALS
         value:
           - install
@@ -93,6 +97,8 @@ spec:
       kind: ClusterTask
     runAfter: ["build"]
     params:
+    - name: CONTEXT_DIR
+      value: "app"
     - name: GOALS
       value: 
         - package
@@ -147,7 +153,7 @@ spec:
     - name: IMAGE
       value: $(params.image):$(params.version)
     - name: DOCKERFILE
-      value: $(params.dockerfilePath)
+      value: "app/$(params.dockerfilePath)"
 
   - name: deploy-to-dev
     runAfter: 
