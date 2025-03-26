@@ -152,8 +152,10 @@ spec:
     params:
     - name: IMAGE
       value: $(params.image):$(params.version)
+    - name: CONTEXT
+      value: "app"
     - name: DOCKERFILE
-      value: "app/$(params.dockerfilePath)"
+      value: $(params.dockerfilePath)
 
   - name: deploy-to-dev
     runAfter: 

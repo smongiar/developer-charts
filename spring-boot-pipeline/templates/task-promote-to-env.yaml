@@ -40,7 +40,7 @@ spec:
       script: |
         set -x
         export result="IN_PROGRESS"
-        
+        cd app/
         while [ "$result" == "IN_PROGRESS" ]; do
           sleep 60
           export sonarlink=$(awk 'match($0,/ceTaskUrl=[\s\S]*.+/){print substr($0,RSTART+10,RLENGTH-10)}' target/sonar/report-task.txt)
@@ -62,6 +62,9 @@ spec:
         
           git config --global user.name "$(params.OWNER)"
           git config --global user.email "$(params.OWNER)@redhat.com"
+        
+          git rebase $current_branch
+          git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin $current_branch
         
           if [ "$current_branch" == "main" ]; then
             git add sonar-result.txt
