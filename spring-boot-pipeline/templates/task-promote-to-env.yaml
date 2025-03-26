@@ -41,7 +41,7 @@ spec:
         set -x
         export result="IN PROGRESS"
         
-        while [ "$result" != "IN_PROGRESS" ]; do
+        while [ "$result" != "SUCCESS" ]; do
           sleep 60
           export sonarlink=$(awk 'match($0,/ceTaskUrl=[\s\S]*.+/){print substr($0,RSTART+10,RLENGTH-10)}' target/sonar/report-task.txt)
           wget $sonarlink
