@@ -110,3 +110,4 @@ spec:
           echo -n "${base_git_url#"$prefix"}" > $(results.repo_name.path)
         
         fi
+
