@@ -40,7 +40,7 @@ spec:
       script: |
         set -x
         export result="IN_PROGRESS"
-        
+        cd app/
         while [ "$result" == "IN_PROGRESS" ]; do
           sleep 60
           export sonarlink=$(awk 'match($0,/ceTaskUrl=[\s\S]*.+/){print substr($0,RSTART+10,RLENGTH-10)}' target/sonar/report-task.txt)
