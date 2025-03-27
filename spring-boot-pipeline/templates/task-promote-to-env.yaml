@@ -57,6 +57,7 @@ spec:
           git checkout $current_branch
           echo -n "$current_branch" > $(results.source_branch_name.path)
         
+          git fetch -a 
           export GITHUB_TOKEN=$(cat /etc/github-open-pr/token)
           export GITHUB_ACTOR=$(params.OWNER)
         
