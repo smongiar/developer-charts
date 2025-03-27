@@ -57,6 +57,7 @@ spec:
           git checkout $current_branch
           echo -n "$current_branch" > $(results.source_branch_name.path)
         
+          git fetch -a 
           export GITHUB_TOKEN=$(cat /etc/github-open-pr/token)
           export GITHUB_ACTOR=$(params.OWNER)
         
@@ -64,19 +65,19 @@ spec:
           git config --global user.email "$(params.OWNER)@redhat.com"
         
           if [ "$current_branch" == "main" ]; then
-            git add sonar-result.txt
+            #git add sonar-result.txt
             target_branch_name=staging
           elif [  "$current_branch" == "staging" ]; then
             target_branch_name=production
           fi
-          git commit -m "mark branch for promotion to $target_branch_name"
-          if [ $? -eq 0 ]; then
-            echo "commit already present"
-          else
-            echo "let amend previous commit"
-            git commit --amend -m "mark branch for promotion to $target_branch_name"
-            git push origin main
-          fi
+          #git commit -m "mark branch for promotion to $target_branch_name"
+          #if [ $? -eq 0 ]; then
+          #  echo "commit already present"
+          #else
+          #  echo "let amend previous commit"
+          #  git commit --amend -m "mark branch for promotion to $target_branch_name"
+          #  git push origin main
+          #fi
         
           existed_in_local=$(git branch --list $target_branch_name)
           if [[ -z ${existed_in_local} ]]; then
