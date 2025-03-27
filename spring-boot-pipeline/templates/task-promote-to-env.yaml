@@ -57,14 +57,12 @@ spec:
           git checkout $current_branch
           echo -n "$current_branch" > $(results.source_branch_name.path)
         
+          git fetch -a 
           export GITHUB_TOKEN=$(cat /etc/github-open-pr/token)
           export GITHUB_ACTOR=$(params.OWNER)
         
           git config --global user.name "$(params.OWNER)"
           git config --global user.email "$(params.OWNER)@redhat.com"
-        
-          git rebase $current_branch
-          git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin $current_branch
         
           if [ "$current_branch" == "main" ]; then
             git add sonar-result.txt
