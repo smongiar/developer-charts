@@ -86,7 +86,8 @@ spec:
             git checkout $target_branch_name
           fi
           git pull origin staging || true
-          git add sonar-result.txt
+          git rm --cached sonar-result.txt
+          #git add sonar-result.txt
           #git branch --set-upstream-to origin/$target_branch_name $target_branch_name
           git commit -m "mark branch for promotion to $target_branch_name" || true
         
