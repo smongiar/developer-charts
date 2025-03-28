@@ -86,13 +86,10 @@ spec:
             git checkout $target_branch_name
           fi
           
-          git rm --cached sonar-result.txt
-          check_ignored_sonar=$(cat .gitignore | grep sonar-result)
-          if [[ -z ${check_ignored_sonar} ]]; then
-            echo 'sonar-result.txt' > .gitignore || true
-          else
-            git pull origin $target_branch_name || true
-          fi
+          git rm --cached sonar-result.txt      
+          grep -q 'sonar-result.txt' '.gitignore' || echo "sonar-result.txt" >> .gitignore
+        
+          git pull origin $target_branch_name || true
             
           #git add sonar-result.txt
           git branch --set-upstream-to origin/$target_branch_name $target_branch_name
