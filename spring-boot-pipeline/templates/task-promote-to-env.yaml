@@ -88,7 +88,7 @@ spec:
           
           git rm --cached sonar-result.txt
           check_ignored_sonar=$(cat .gitignore | grep sonar-result)
-          if [[ -z ${existed_in_local} ]]; then
+          if [[ -z ${check_ignored_sonar} ]]; then
             git pull origin $target_branch_name
           else
             echo 'sonar-result.txt' > .gitignore
