@@ -87,12 +87,18 @@ spec:
           fi
           
           git rm --cached sonar-result.txt
-          git pull origin $target_branch_name || true
+          check_ignored_sonar=$(cat .gitignore | grep sonar-result)
+          if [[ -z ${existed_in_local} ]]; then
+            git pull origin $target_branch_name
+          else
+            echo 'sonar-result.txt' > .gitignore
+          fi
+            
           #git add sonar-result.txt
-          #git branch --set-upstream-to origin/$target_branch_name $target_branch_name
+          git branch --set-upstream-to origin/$target_branch_name $target_branch_name
           git commit -m "mark branch for promotion to $target_branch_name" || true
         
-          git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin $target_branch_name 
+          git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin +$target_branch_name 
         
           # back to the current branch
           #git checkout $current_branch
