@@ -66,11 +66,11 @@ spec:
         fi
         
         git fetch -a 
-        export GITHUB_TOKEN=$(cat /etc/github-open-pr/token)
-        export GITHUB_ACTOR=$(params.OWNER)
+        #export GITHUB_TOKEN=$(cat /etc/github-open-pr/token)
+        #export GITHUB_ACTOR=$(params.OWNER)
       
-        git config --global user.name "$(params.OWNER)"
-        git config --global user.email "$(params.OWNER)@redhat.com"
+        #git config --global user.name "$(params.OWNER)"
+        #git config --global user.email "$(params.OWNER)@redhat.com"
       
         existed_in_local=$(git branch --list $target_branch_name)
         if [[ -z ${existed_in_local} ]]; then
@@ -87,8 +87,9 @@ spec:
         git branch --set-upstream-to origin/$target_branch_name $target_branch_name
         git commit -m "mark branch for promotion to $target_branch_name" || true
       
-        git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin +$target_branch_name 
-    
+        #git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin +$target_branch_name 
+        push origin +$target_branch_name
+        
         base_git_url=$(git ls-remote --get-url origin)
         prefix="https://github.com/"
         echo -n "${base_git_url#"$prefix"}" > $(results.repo_name.path)
