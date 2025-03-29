@@ -47,6 +47,8 @@ spec:
         value: $(params.git-revision)
       - name: subdirectory
         value: "app"
+      - name: verbose
+        value: "true"
     workspaces:
     - name: output
       workspace: maven-repo
@@ -152,7 +154,7 @@ spec:
       - name: OWNER
         value: {{ .Values.system }}
     workspaces:
-      - name: source
+      - name: output
         workspace: maven-repo
 
   - name: build-container-image
