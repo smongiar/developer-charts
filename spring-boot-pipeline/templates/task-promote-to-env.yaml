@@ -17,7 +17,7 @@ spec:
       type: string
   workspaces:
     - description: The workspace consisting of maven project.
-      name: source
+      name: output
   results:
     - name: target_branch_name
       description: The branch name used for pull-request
@@ -36,7 +36,7 @@ spec:
       #  - name: githubtoken
       #    readOnly: true
       #    mountPath: /etc/github-open-pr
-      workingDir: $(workspaces.source.path)
+      workingDir: $(workspaces.output.path)
       script: |
         set -x
         cd app/
@@ -88,7 +88,7 @@ spec:
         git commit -m "mark branch for promotion to $target_branch_name" || true
       
         #git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin +$target_branch_name 
-        push origin +$target_branch_name
+        git push origin +$target_branch_name
         
         base_git_url=$(git ls-remote --get-url origin)
         prefix="https://github.com/"
