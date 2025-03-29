@@ -199,6 +199,6 @@ spec:
           - "main"
     params:
       - name: SCRIPT
-        value: oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-qa
+        value: oc adm policy add-role-to-user cluster-admin  system:serviceaccount:{{ .Values.system }}-build:pipeline; oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-qa
 
 
