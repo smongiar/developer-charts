@@ -69,6 +69,25 @@ spec:
     - name: maven-settings
       workspace: maven-settings
 
+  - name: package
+    taskRef:
+      name: maven
+      kind: ClusterTask
+    runAfter: ["build"]
+    params:
+    - name: CONTEXT_DIR
+      value: "app"
+    - name: GOALS
+      value: 
+        - package
+        - -DskipTests
+        - '-B'
+    workspaces:
+    - name: source
+      workspace: maven-repo
+    - name: maven-settings
+      workspace: maven-settings
+
   - name: code-analysis
     taskRef:
       name: maven
@@ -96,24 +115,31 @@ spec:
           - -Dsonar.userHome=/tmp/sonar
           - -DskipTests=true
 
-  - name: package
+  - name: trivy-scan-local-image
     taskRef:
-      name: maven
-      kind: ClusterTask
-    runAfter: ["build"]
+      name: trivy-scanner
+      kind: Task
+    when:
+      - input: $(params.git-revision)
+        operator: notin
+        values:
+          - "main"
     params:
-    - name: CONTEXT_DIR
-      value: "app"
-    - name: GOALS
-      value: 
-        - package
-        - -DskipTests
-        - '-B'
+      - name: ARGS
+        value:
+          - "image"
+          - "--light"
+          - "--exit-code"
+          - "1"
+          - "--severity"
+          - "CRITICAL"
+      - name: IMAGE_PATH
+        value: $(params.image):$(params.version)
     workspaces:
-    - name: source
-      workspace: maven-repo
-    - name: maven-settings
-      workspace: maven-settings
+      - name: source
+        workspace: maven-repo
+    runAfter:
+      - package
 
   - name: promote-pr
     runAfter:
@@ -176,5 +202,20 @@ spec:
     params:
     - name: SCRIPT
       value: oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-dev
+
+  - name: deploy-to-qa
+    runAfter:
+      - build-container-image
+    taskRef:
+      name: openshift-client
+      kind: ClusterTask
+    when:
+      - input: $(params.git-revision)
+        operator: notin
+        values:
+          - "main"
+    params:
+      - name: SCRIPT
+        value: oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-qa
 
 
