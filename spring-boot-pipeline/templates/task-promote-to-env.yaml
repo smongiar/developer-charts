@@ -25,17 +25,17 @@ spec:
       description: The resulting current branch
     - name: repo_name
       description: Git Repo Url starting from organization path
-  volumes:
-    - name: githubtoken
-      secret:
-        secretName: github
+  #volumes:
+  #  - name: githubtoken
+  #    secret:
+  #      secretName: github
   steps:
     - name: promote
       image: mirror.gcr.io/alpine/git:v2.26.2
-      volumeMounts:
-        - name: githubtoken
-          readOnly: true
-          mountPath: /etc/github-open-pr
+      #volumeMounts:
+      #  - name: githubtoken
+      #    readOnly: true
+      #    mountPath: /etc/github-open-pr
       workingDir: $(workspaces.source.path)
       script: |
         set -x
