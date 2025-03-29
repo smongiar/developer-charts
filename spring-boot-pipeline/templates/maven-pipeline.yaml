@@ -155,23 +155,6 @@ spec:
       - name: source
         workspace: maven-repo
 
-  #- name: open-git-pull-request
-  #  runAfter:
-  #    - promote-pr
-  #  taskRef:
-  #    name: github-open-pr
-  #  params:
-  #    - name: REPO_FULL_NAME
-  #      value: $(tasks.promote-pr.results.repo_name)
-  #    - name: HEAD
-  #      value: $(tasks.promote-pr.results.source_branch_name)
-  #    - name: BASE
-  #      value: $(tasks.promote-pr.results.target_branch_name)
-  #    - name: TITLE
-  #      value: "[$(context.taskRun.name)] Promotion to $(tasks.promote-pr.results.target_branch_name)"
-  #    - name: BODY
-  #      value: "{{ .Values.system }}-{{ .Values.component }}-service check passed for $(tasks.promote-pr.results.target_branch_name)"
-
   - name: build-container-image
     runAfter: ["package"]
     taskRef:
