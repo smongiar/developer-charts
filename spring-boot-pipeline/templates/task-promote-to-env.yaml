@@ -17,7 +17,7 @@ spec:
       type: string
   workspaces:
     - description: The workspace consisting of maven project.
-      name: source
+      name: output
   results:
     - name: target_branch_name
       description: The branch name used for pull-request
@@ -36,7 +36,7 @@ spec:
       #  - name: githubtoken
       #    readOnly: true
       #    mountPath: /etc/github-open-pr
-      workingDir: $(workspaces.source.path)
+      workingDir: $(workspaces.output.path)
       script: |
         set -x
         cd app/
