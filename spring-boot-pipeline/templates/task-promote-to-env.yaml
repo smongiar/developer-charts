@@ -84,7 +84,12 @@ spec:
       
         git pull origin $target_branch_name || true
         git add .gitignore  
-        git branch --set-upstream-to origin/$target_branch_name $target_branch_name
+        
+        existed_in_remote=$(git ls-remote --heads origin $target_branch_name)
+         if [[ -n ${existed_in_remote} ]]; then
+          git branch --set-upstream-to origin/$target_branch_name $target_branch_name
+        fi
+        
         git commit -m "mark branch for promotion to $target_branch_name" || true
       
         git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin +$target_branch_name 
