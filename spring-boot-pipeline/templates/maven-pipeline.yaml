@@ -117,7 +117,7 @@ spec:
           - -Dsonar.userHome=/tmp/sonar
           - -DskipTests=true
 
-  - name: trivy-scan-local-image
+  - name: cve-scan-local-image
     taskRef:
       name: trivy-scanner
       kind: Task
@@ -146,6 +146,7 @@ spec:
   - name: promote-pr
     runAfter:
       - code-analysis
+      - cve-scan-local-image
     taskRef:
       name: create-promote-pull-request
     params:
