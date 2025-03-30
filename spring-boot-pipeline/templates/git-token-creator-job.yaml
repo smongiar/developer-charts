@@ -2,8 +2,6 @@ kind: Job
 apiVersion: batch/v1
 metadata:
   name: {{ .Values.component }}-git-token-job
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
 spec:
   selector: {}
   template:
