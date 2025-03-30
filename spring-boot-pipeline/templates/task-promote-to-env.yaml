@@ -86,7 +86,7 @@ spec:
         git add .gitignore  
         
         existed_in_remote=$(git ls-remote --heads origin $target_branch_name)
-         if [[ -n ${existed_in_remote} ]]; then
+        if [[ -n ${existed_in_remote} ]]; then
           git branch --set-upstream-to origin/$target_branch_name $target_branch_name
         fi
         
