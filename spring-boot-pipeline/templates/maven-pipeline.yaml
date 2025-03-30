@@ -150,7 +150,7 @@ spec:
       name: create-promote-pull-request
     params:
       - name: GIT_BRANCH
-        value: $(params.app-source-branch)
+        value: $(params.git-revision)
       - name: OWNER
         value: {{ .Values.system }}
     workspaces:
@@ -186,7 +186,11 @@ spec:
           - "main"
     params:
     - name: SCRIPT
-      value: oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-dev
+      value: |
+        set-x
+        oc adm policy add-role-to-user cluster-admin system:serviceaccount:{{ .Values.system }}-build:pipeline 
+        oc policy add-role-to-user system:image-puller system:serviceaccount:{{ .Values.system }}-dev:default --namespace={{ .Values.system }}-build
+        oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-dev
 
   - name: deploy-to-qa
     runAfter:
@@ -201,6 +205,10 @@ spec:
           - "main"
     params:
       - name: SCRIPT
-        value: oc adm policy add-role-to-user cluster-admin  system:serviceaccount:{{ .Values.system }}-build:pipeline; oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-qa
+        value: |
+          set-x
+          oc adm policy add-role-to-user cluster-admin system:serviceaccount:{{ .Values.system }}-build:pipeline 
+          oc policy add-role-to-user system:image-puller system:serviceaccount:{{ .Values.system }}-qa:default --namespace={{ .Values.system }}-build
+          oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-qa
 
 
