@@ -6,7 +6,8 @@ metadata:
 spec:
   serviceAccountName: pipeline
   triggers:
-    - bindings:
+    - name: dev-trigger
+      bindings:
         - kind: ClusterTriggerBinding
           ref: github-push
       interceptors:
@@ -19,4 +20,24 @@ spec:
           ref:
             name: cel
       template:
-        ref: {{ .Values.component }}-run-pipeline
+        ref: "{{ .Values.component }}-run-pipeline"
+    - name: qa-trigger
+      bindings:
+          - kind: ClusterTriggerBinding
+            ref: github-pullreq
+      interceptors:
+        - params:
+            - name: pullreq-title
+              value: >-
+                body.pull_request.title.contains('staging')
+            - name: pullreq-action
+              value: >-
+                (body.action in ['closed'] && body.pull_request.merged == true)
+            - name: overlays
+              value: null
+          ref:
+            name: cel
+      template:
+        ref: "{{ .Values.component }}-run-pipeline"
+
+
