@@ -117,7 +117,7 @@ spec:
           - -Dsonar.userHome=/tmp/sonar
           - -DskipTests=true
 
-  - name: trivy-scan-local-image
+  - name: cve-scan-local-image
     taskRef:
       name: trivy-scanner
       kind: Task
@@ -146,6 +146,7 @@ spec:
   - name: promote-pr
     runAfter:
       - code-analysis
+      - cve-scan-local-image
     taskRef:
       name: create-promote-pull-request
     params:
@@ -187,7 +188,7 @@ spec:
     params:
     - name: SCRIPT
       value: |
-        set-x
+        set -x
         oc adm policy add-role-to-user cluster-admin system:serviceaccount:{{ .Values.system }}-build:pipeline 
         oc policy add-role-to-user system:image-puller system:serviceaccount:{{ .Values.system }}-dev:default --namespace={{ .Values.system }}-build
         oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-dev
@@ -206,7 +207,7 @@ spec:
     params:
       - name: SCRIPT
         value: |
-          set-x
+          set -x
           oc adm policy add-role-to-user cluster-admin system:serviceaccount:{{ .Values.system }}-build:pipeline 
           oc policy add-role-to-user system:image-puller system:serviceaccount:{{ .Values.system }}-qa:default --namespace={{ .Values.system }}-build
           oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-qa

@@ -61,7 +61,8 @@ spec:
             echo "Quality Gate not passed"
             exit 1
           fi
-        elif [  "$current_branch" == "staging" ]; then
+        elif [  "$current_branch" != "main" ]; then
+          current_branch=staging
           target_branch_name=production
         fi
         echo -n "$target_branch_name" > $(results.target_branch_name.path)
