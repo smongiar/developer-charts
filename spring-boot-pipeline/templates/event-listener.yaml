@@ -12,7 +12,7 @@ spec:
           ref: github-push
       interceptors:
         - params:
-            - name: git-revision
+            - name: "filter"
               value: >-
                 body.ref.contains('main')
             - name: overlays
@@ -27,12 +27,9 @@ spec:
             ref: github-pullreq
       interceptors:
         - params:
-            - name: pullreq-title
+            - name: "filter"
               value: >-
-                body.pull_request.title.contains('staging')
-            - name: pullreq-action
-              value: >-
-                (body.action in ['closed'] && body.pull_request.merged == true)
+                (body.pull_request.title.contains('staging') && body.action in ['closed'] && body.pull_request.merged == true)
             - name: overlays
               value: null
           ref:
