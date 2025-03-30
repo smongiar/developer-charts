@@ -187,7 +187,7 @@ spec:
     params:
     - name: SCRIPT
       value: |
-        set-x
+        set -x
         oc adm policy add-role-to-user cluster-admin system:serviceaccount:{{ .Values.system }}-build:pipeline 
         oc policy add-role-to-user system:image-puller system:serviceaccount:{{ .Values.system }}-dev:default --namespace={{ .Values.system }}-build
         oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-dev
@@ -206,7 +206,7 @@ spec:
     params:
       - name: SCRIPT
         value: |
-          set-x
+          set -x
           oc adm policy add-role-to-user cluster-admin system:serviceaccount:{{ .Values.system }}-build:pipeline 
           oc policy add-role-to-user system:image-puller system:serviceaccount:{{ .Values.system }}-qa:default --namespace={{ .Values.system }}-build
           oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-qa
