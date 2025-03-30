@@ -41,6 +41,7 @@ spec:
         set -x
         git config --global --add safe.directory /workspace/output
         cd app/
+        git fetch -a
         current_branch=$(echo $(params.GIT_BRANCH) | awk -F/ '{print $NF}')
         git checkout $current_branch
         echo -n "$current_branch" > $(results.source_branch_name.path)

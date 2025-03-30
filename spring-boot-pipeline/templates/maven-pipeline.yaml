@@ -138,7 +138,7 @@ spec:
       - name: IMAGE_PATH
         value: $(params.image):$(params.version)
     workspaces:
-      - name: source
+      - name: manifest-dir
         workspace: maven-repo
     runAfter:
       - package
