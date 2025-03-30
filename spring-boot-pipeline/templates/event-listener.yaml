@@ -20,11 +20,11 @@ spec:
           ref:
             name: cel
       template:
-        ref: {{ .Values.component }}-run-pipeline
+        ref: "{{ .Values.component }}-run-pipeline"
     - name: qa-trigger
       bindings:
-        - kind: ClusterTriggerBinding
-          ref: github-pullreq
+          - kind: ClusterTriggerBinding
+            ref: github-pullreq
       interceptors:
         - params:
             - name: pullreq-title
@@ -38,6 +38,7 @@ spec:
           ref:
             name: cel
       template:
-        ref: { { .Values.component } }-run-pipeline
+        ref: "{{ .Values.component }}-run-pipeline"
+
 
 
