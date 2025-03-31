@@ -115,3 +115,4 @@ spec:
         set -x
         export GITHUB_TOKEN=$(cat /etc/github-open-pr/token)
         curl -X POST 'https://api.github.com/repos/"'"$(results.repo_name.path)"'"/pulls' -H 'Authorization: Bearer '"$GITHUB_TOKEN"'' -H 'Content-Type: application/vnd.github+json' -d '{"base":"'"$(results.target_branch_name.path)"'", "head":"'"$(results.target_branch_name.path)"'", "title":"Test"}'
+
