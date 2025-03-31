@@ -72,6 +72,7 @@ spec:
           git add sonar-result.txt
           git add .gitignore
           git commit -m "Updating code-analysis result"
+          git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin +main
         elif [  "$current_branch" != "main" ]; then
           current_branch=staging
           target_branch_name=production
@@ -96,10 +97,6 @@ spec:
           git branch --set-upstream-to origin/$target_branch_name $target_branch_name
         fi
         
-        #git commit -m "mark branch for promotion to $target_branch_name" || true
-      
-        #git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin +$target_branch_name
-  
         base_git_url=$(git ls-remote --get-url origin)
         prefix="https://github.com/"
         echo -n "${base_git_url#"$prefix"}" > $(results.repo_name.path)
@@ -118,5 +115,6 @@ spec:
         export GIT_REPO=$(cat /workspace/output/git-repo)
         export SOURCE_BRANCH=$(cat /workspace/output/current-branch)
         export TARGET_BRANCH=$(cat /workspace/output/target-branch)
-        curl -X POST 'https://api.github.com/repos/'"${GIT_REPO}"'/pulls' -H 'Authorization: Bearer '"$GITHUB_TOKEN"'' -H 'Content-Type: application/vnd.github+json' -d '{"base":"'"${TARGET_BRANCH}"'", "head":"'"${SOURCE_BRANCH}"'", "title":"Test"}'
+        export PR_TITLE="mark branch for promotion to '"$TARGET_BRANCH"'"
+        curl -X POST 'https://api.github.com/repos/'"${GIT_REPO}"'/pulls' -H 'Authorization: Bearer '"$GITHUB_TOKEN"'' -H 'Content-Type: application/vnd.github+json' -d '{"base":"'"${TARGET_BRANCH}"'", "head":"'"${SOURCE_BRANCH}"'", "title":"'"${PR_TITLE}"'"}'
 
