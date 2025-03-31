@@ -16,7 +16,9 @@ spec:
               value: >-
                 body.ref.contains('main')
             - name: overlays
-              value: null
+              value:
+                - key: git-revision
+                  expression: "body.ref.split('/')[2]"
           ref:
             name: cel
       template:
@@ -29,9 +31,11 @@ spec:
         - params:
             - name: "filter"
               value: >-
-                (header.match('X-GitHub-Event', 'pull_request') && body.pull_request.title.contains('staging') && body.action in ['closed'] && body.pull_request.merged == true)
+                (header.match('X-GitHub-Event', 'pull_request') && (body.pull_request.title.contains('staging') || body.pull_request.title.contains('production')) && body.action in ['closed'] && body.pull_request.merged == true)
             - name: overlays
-              value: null
+              value:
+                - key: git-revision
+                  expression: "body.ref.split('/')[2]"
           ref:
             name: cel
       template:
