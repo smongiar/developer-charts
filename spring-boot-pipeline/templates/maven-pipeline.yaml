@@ -123,9 +123,9 @@ spec:
       kind: Task
     when:
       - input: $(params.git-revision)
-        operator: notin
+        operator: in
         values:
-          - "main"
+          - "staging"
     params:
       - name: ARGS
         value:
@@ -149,6 +149,11 @@ spec:
       - cve-scan-local-image
     taskRef:
       name: create-promote-pull-request
+    when:
+      - input: $(params.git-revision)
+        operator: notin
+        values:
+          - "production"
     params:
       - name: GIT_BRANCH
         value: $(params.git-revision)
@@ -201,9 +206,9 @@ spec:
       kind: ClusterTask
     when:
       - input: $(params.git-revision)
-        operator: notin
+        operator: in
         values:
-          - "main"
+          - "staging"
     params:
       - name: SCRIPT
         value: |
@@ -211,5 +216,24 @@ spec:
           oc adm policy add-role-to-user cluster-admin system:serviceaccount:{{ .Values.system }}-build:pipeline 
           oc policy add-role-to-user system:image-puller system:serviceaccount:{{ .Values.system }}-qa:default --namespace={{ .Values.system }}-build
           oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-qa
+
+  - name: deploy-to-prod
+    runAfter:
+      - build-container-image
+    taskRef:
+      name: openshift-client
+      kind: ClusterTask
+    when:
+      - input: $(params.git-revision)
+        operator: in
+        values:
+          - "production"
+    params:
+      - name: SCRIPT
+        value: |
+          set -x
+          oc adm policy add-role-to-user cluster-admin system:serviceaccount:{{ .Values.system }}-build:pipeline 
+          oc policy add-role-to-user system:image-puller system:serviceaccount:{{ .Values.system }}-prod:default --namespace={{ .Values.system }}-build
+          oc rollout restart deployment/{{ .Values.component }} -n {{ .Values.system }}-prod        
 
 
