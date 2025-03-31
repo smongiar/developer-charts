@@ -96,8 +96,10 @@ spec:
         
         git commit -m "mark branch for promotion to $target_branch_name" || true
       
-        git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin +$target_branch_name 
-        
+        #git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin +$target_branch_name
+  
         base_git_url=$(git ls-remote --get-url origin)
         prefix="https://github.com/"
         echo -n "${base_git_url#"$prefix"}" > $(results.repo_name.path)
+        
+        curl -X POST 'https://api.github.com/repos/${base_git_url#"$prefix"}/pulls' -H 'Authorization: Bearer '"$GITHUB_TOKEN"'' -H 'Content-Type: application/vnd.github+json' -d '{"base":"staging", "head":"main", "title":"Test"}'
