@@ -10,9 +10,6 @@ spec:
       bindings:
         - kind: ClusterTriggerBinding
           ref: github-push
-          params:
-            - name: git-revision
-              value: $(extensions.ref)
       interceptors:
         - params:
             - name: "filter"
