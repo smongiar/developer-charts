@@ -86,6 +86,7 @@ spec:
         #grep -q 'sonar-result.txt' '.gitignore' || echo "sonar-result.txt" >> .gitignore
       
         git pull origin $target_branch_name || true
+        git add sonar-result.txt
         git add .gitignore  
         
         existed_in_remote=$(git ls-remote --heads origin $target_branch_name)
