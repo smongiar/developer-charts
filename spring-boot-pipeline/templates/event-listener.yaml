@@ -16,11 +16,9 @@ spec:
               value: >-
                 body.ref.contains('main')
             - name: overlays
-              params:
-                - name: "overlays"
-                  value:
-                    - key: git-revision
-                      expression: "body.ref.split('/')[2]"
+              value:
+                - key: git-revision
+                  expression: "body.ref.split('/')[2]"
           ref:
             name: cel
       template:
