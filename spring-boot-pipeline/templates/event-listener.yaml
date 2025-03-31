@@ -8,11 +8,8 @@ spec:
   triggers:
     - name: dev-trigger
       bindings:
-        - kind: ClusterTriggerBinding
-          ref: github-push
-          params:
-            - name: git-revision
-              value: $(extensions.ref)
+        - name: git-revision
+          value: $(extensions.ref)
       interceptors:
         - params:
             - name: "filter"
@@ -28,11 +25,8 @@ spec:
         ref: "{{ .Values.component }}-run-pipeline"
     - name: qa-trigger
       bindings:
-          - kind: ClusterTriggerBinding
-            ref: github-pullreq
-            params:
-              - name: git-revision
-                value: $(extensions.ref)
+        - name: git-revision
+          value: $(extensions.ref)
       interceptors:
         - params:
             - name: "filter"
