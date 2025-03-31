@@ -25,6 +25,8 @@ spec:
       description: The resulting current branch
     - name: repo_name
       description: Git Repo Url starting from organization path
+    - name: pr_title
+      description: Pull Request title
   volumes:
     - name: githubtoken
       secret:
@@ -101,5 +103,15 @@ spec:
         base_git_url=$(git ls-remote --get-url origin)
         prefix="https://github.com/"
         echo -n "${base_git_url#"$prefix"}" > $(results.repo_name.path)
-        
-        curl -X POST 'https://api.github.com/repos/${base_git_url#"$prefix"}/pulls' -H 'Authorization: Bearer '"$GITHUB_TOKEN"'' -H 'Content-Type: application/vnd.github+json' -d '{"base":"staging", "head":"main", "title":"Test"}'
+
+    - name: create-pr
+      image: mirror.gcr.io/curlimages/curl:8.12.1
+      volumeMounts:
+        - name: githubtoken
+          readOnly: true
+          mountPath: /etc/github-open-pr
+      workingDir: $(workspaces.output.path)
+      script: |
+        set -x
+        export GITHUB_TOKEN=$(cat /etc/github-open-pr/token)
+        curl -X POST 'https://api.github.com/repos/"'"$(results.repo_name.path)"'"/pulls' -H 'Authorization: Bearer '"$GITHUB_TOKEN"'' -H 'Content-Type: application/vnd.github+json' -d '{"base":"'"$(results.target_branch_name.path)"'", "head":"'"$(results.target_branch_name.path)"'", "title":"Test"}'
