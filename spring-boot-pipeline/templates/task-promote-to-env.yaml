@@ -72,6 +72,7 @@ spec:
           git add sonar-result.txt
           git add .gitignore
           git commit -m "Updating code-analysis result"
+          git -c credential.helper= -c credential.helper='!f() { echo username=$(params.OWNER); echo "password=$GITHUB_TOKEN"; };f' push origin +main
         elif [  "$current_branch" != "main" ]; then
           current_branch=staging
           target_branch_name=production
