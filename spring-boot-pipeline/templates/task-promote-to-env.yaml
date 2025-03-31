@@ -47,6 +47,7 @@ spec:
         current_branch=$(echo $(params.GIT_BRANCH) | awk -F/ '{print $NF}')
         git checkout $current_branch
         echo -n "$current_branch" > $(results.source_branch_name.path)
+        echo -n "$current_branch" > ../current-branch
         
         if [ "$current_branch" == "main" ]; then
           target_branch_name=staging
@@ -68,6 +69,7 @@ spec:
           target_branch_name=production
         fi
         echo -n "$target_branch_name" > $(results.target_branch_name.path)
+        echo -n "$target_branch_name" > ../target-branch
         
         export GITHUB_TOKEN=$(cat /etc/github-open-pr/token)
         export GITHUB_ACTOR=$(params.OWNER)
@@ -103,6 +105,7 @@ spec:
         base_git_url=$(git ls-remote --get-url origin)
         prefix="https://github.com/"
         echo -n "${base_git_url#"$prefix"}" > $(results.repo_name.path)
+        echo -n "${base_git_url#"$prefix"}" > ../git-repo
 
     - name: create-pr
       image: mirror.gcr.io/curlimages/curl:8.12.1
@@ -114,5 +117,8 @@ spec:
       script: |
         set -x
         export GITHUB_TOKEN=$(cat /etc/github-open-pr/token)
-        curl -X POST 'https://api.github.com/repos/"'"$(results.repo_name.path)"'"/pulls' -H 'Authorization: Bearer '"$GITHUB_TOKEN"'' -H 'Content-Type: application/vnd.github+json' -d '{"base":"'"$(results.target_branch_name.path)"'", "head":"'"$(results.target_branch_name.path)"'", "title":"Test"}'
+        export GIT_REPO=$(cat git-repo)
+        export SOURCE_BRANCH=$(cat source-branch)
+        export TARGET_BRANCH=$(cat target-branch)
+        curl -X POST 'https://api.github.com/repos/'"$(GIT_REPO)"'/pulls' -H 'Authorization: Bearer '"$GITHUB_TOKEN"'' -H 'Content-Type: application/vnd.github+json' -d '{"base":"'"$(SOURCE_BRANCH)"'", "head":"'"$(TARGET_BRANCH)"'", "title":"Test"}'
 
