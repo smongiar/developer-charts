@@ -120,5 +120,5 @@ spec:
         export GIT_REPO=$(cat /workspace/output/git-repo)
         export SOURCE_BRANCH=$(cat /workspace/output/current-branch)
         export TARGET_BRANCH=$(cat /workspace/output/target-branch)
-        curl -X POST 'https://api.github.com/repos/'"${GIT_REPO}"'/pulls' -H 'Authorization: Bearer '"$GITHUB_TOKEN"'' -H 'Content-Type: application/vnd.github+json' -d '{"base":"'"${SOURCE_BRANCH}"'", "head":"'"${TARGET_BRANCH}"'", "title":"Test"}'
+        curl -X POST 'https://api.github.com/repos/'"${GIT_REPO}"'/pulls' -H 'Authorization: Bearer '"$GITHUB_TOKEN"'' -H 'Content-Type: application/vnd.github+json' -d '{"base":"'"${TARGET_BRANCH}"'", "head":"'"${SOURCE_BRANCH}"'", "title":"Test"}'
 
