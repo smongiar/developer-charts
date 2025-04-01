@@ -10,7 +10,7 @@ spec:
       bindings:
         - kind: ClusterTriggerBinding
           name: git-revision
-          value: $(expressions.git-revision)
+          value: $(extensions.git-revision)
       interceptors:
         - params:
             - name: "filter"
@@ -28,16 +28,34 @@ spec:
       bindings:
         - kind: ClusterTriggerBinding
           name: git-revision
-          value: $(expressions.git-revision)
+          value: $(extensions.git-revision)
       interceptors:
         - params:
             - name: "filter"
               value: >-
-                body.action=='closed'
+                body.ref.contains('staging')
             - name: overlays
               value:
                 - key: git-revision
-                  expression: "body.pull_request.base.ref.split('/')[2]"
+                  expression: "body.ref.split('/')[2]"
+          ref:
+            name: cel
+      template:
+        ref: "{{ .Values.component }}-run-pipeline"
+    - name: qa-trigger
+      bindings:
+        - kind: ClusterTriggerBinding
+          name: git-revision
+          value: $(extensions.git-revision)
+      interceptors:
+        - params:
+            - name: "filter"
+              value: >-
+                body.ref.contains('production')
+            - name: overlays
+              value:
+                - key: git-revision
+                  expression: "body.ref.split('/')[2]"
           ref:
             name: cel
       template:
