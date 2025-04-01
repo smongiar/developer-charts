@@ -33,7 +33,7 @@ spec:
         - params:
             - name: "filter"
               value: >-
-                body.pull_request.base.ref.contains('staging')
+                body.action=='closed'
             - name: overlays
               value:
                 - key: git-revision
