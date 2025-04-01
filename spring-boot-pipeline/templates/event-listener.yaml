@@ -33,7 +33,7 @@ spec:
         - params:
             - name: "filter"
               value: >-
-                header.match('X-GitHub-Event', 'pull_request')
+                body.pull_request.base.ref.contains('staging')
             - name: overlays
               value:
                 - key: git-revision
