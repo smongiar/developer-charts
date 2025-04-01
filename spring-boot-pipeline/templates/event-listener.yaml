@@ -31,11 +31,11 @@ spec:
         - params:
             - name: "filter"
               value: >-
-                (header.match('X-GitHub-Event', 'pull_request') && (pull_request.base.ref.contains('staging') || pull_request.base.ref.contains('production')) && body.action in ['closed'] && body.pull_request.merged == true)
+                (header.match('X-GitHub-Event', 'pull_request'))
             - name: overlays
               value:
                 - key: git-revision
-                  expression: pull_request.base.ref.split('/')[2]"
+                  expression: "body.pull_request.base.ref.split('/')[2]"
           ref:
             name: cel
       template:
