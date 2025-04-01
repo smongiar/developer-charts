@@ -31,7 +31,7 @@ spec:
         - params:
             - name: "filter"
               value: >-
-                (header.match('X-GitHub-Event', 'pull_request') && (body.pull_request.base.ref. in ['staging', 'production']) && (body.action in ['closed']) && body.pull_request.merged == true)
+                (header.match('X-GitHub-Event', 'pull_request'))
             - name: overlays
               value:
                 - key: git-revision
