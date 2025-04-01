@@ -33,11 +33,11 @@ spec:
         - params:
             - name: "filter"
               value: >-
-                header.match('X-GitHub-Event', 'pull_request')
+                body.ref.contains('staging')
             - name: overlays
               value:
                 - key: git-revision
-                  expression: "body.pull_request.base.ref.split('/')[2]"
+                  expression: "body.ref.split('/')[2]"
           ref:
             name: cel
       template:
