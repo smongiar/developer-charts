@@ -42,7 +42,7 @@ spec:
             name: cel
       template:
         ref: "{{ .Values.component }}-run-pipeline"
-    - name: qa-trigger
+    - name: prod-trigger
       bindings:
         - kind: ClusterTriggerBinding
           name: git-revision
